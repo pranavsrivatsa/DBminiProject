@@ -1,46 +1,54 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
-        <title>Application</title>
+<!doctype html>
+<html class="no-js" lang="en">
 
-         <style>
-            .container{
-                    padding-top: 80px;
-                }
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}Title{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="{{url_for('static', filename='assets/images/icon/favicon.ico')}}">
+    <link rel="shortcut icon" type="image/png" href="{{url_for('static', filename='assets/images/icon/favicon.ico')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/themify-icons.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/metisMenu.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/owl.carousel.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/slicknav.min.css')}}">
+    <!-- amchart css -->
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <!-- others css -->
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/typography.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/default-css.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/css/responsive.css')}}">
+    <!-- modernizr css -->
+    <script src="{{url_for('static', filename='assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
+</head>
 
-            .navbar{
-                background-color: #3f62a3;
-            }
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!-- preloader area start -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+    <div class="container">
+      {% block content %}Content{% endblock %}
+    </div>
+    <!-- jquery latest version -->
+    <script src="{{url_for('static', filename='assets/js/vendor/jquery-2.2.4.min.js')}}"></script>
+    <!-- bootstrap 4 js -->
+    <script src="{{url_for('static', filename='assets/js/popper.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/owl.carousel.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/metisMenu.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/jquery.slimscroll.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/jquery.slicknav.min.js')}}"></script>
 
-            h1{
-                padding-bottom: 20px;
-            }
-        </style>
+    <!-- others plugins -->
+    <script src="{{url_for('static', filename='assets/js/plugins.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/js/scripts.js')}}"></script>
+</body>
 
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-            <a class="navbar-brand" href="/"><i class="fa fa-users"></i>Staff</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </nav>
-
-        <div class="container"></div>
-        <h1>{% block title %}Title{% endblock %}</h1>
-
-        {% block content %}Content{% endblock %}
-        </div>
-
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    </body>
 </html>

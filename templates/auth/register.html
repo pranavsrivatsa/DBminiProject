@@ -1,15 +1,56 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Register{% endblock %}</h1>
+  {% block title %}Register{% endblock %}
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Register">
-  </form>
+    <div class="login-area login-s2">
+        <div class="container">
+            <div class="login-box ptb--100">
+                <form action="#" method="post">
+                    <div class="login-form-head">
+                        <h4>Sign up</h4>
+                        <p>Hello there, Sign up and Join with Us</p>
+                    </div>
+                    <div class="login-form-body">
+                        <div class="form-gp">
+                            <label for="exampleInputName1">Full Name</label>
+                            <input class="form-control" type="text" id="InputName" name="InputName">
+                            <i class="ti-user"></i>
+                        </div>
+                        <div class="form-gp">
+                            <label for="Email">Email address</label>
+                            <input class="form-control" type="email" id="InputEmail" name="InputEmail">
+                            <i class="ti-email"></i>
+                        </div>
+                        <div class="form-gp">
+                            <label for="InputPassword">Password</label>
+                            <input class="form-control" type="password" id="InputPassword" name="InputPassword">
+                            <i class="ti-lock"></i>
+                        </div>
+                        <div class="form-gp">
+                            <label for="ConfirmInputPassword">Confirm Password</label>
+                            <input type="password" id="ConfirmInputPassword">
+                            <i class="ti-lock"></i>
+                        </div>
+                        <div class="submit-btn-area">
+                            <button id="form_submit" type="submit" value="Submit">Submit<i class="ti-arrow-right"></i></button>
+                            <div class="login-other row mt-4">
+                                <div class="col-6">
+                                    <a class="fb-login" href="#">Sign up with <i class="fa fa-facebook"></i></a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="google-login" href="#">Sign up with <i class="fa fa-google"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-footer text-center mt-5">
+                            <p class="text-muted">Have an account? <a href="{{url_for('login')}}">Sign in</a></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
