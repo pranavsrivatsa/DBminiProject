@@ -1,6 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+
+"""
+>python3 models.py db --help
+>python3 models.py db init
+>python3 models.py db migrate
+>python3 models.py db upgrade
+"""
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
@@ -8,7 +16,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 
-class Accounts(db.Model):
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
+class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
@@ -26,3 +37,6 @@ class Customer(db.Model):
 
     def __repr__(self):
         return self.type
+
+if __name__=='__main__':
+    manager.run()
