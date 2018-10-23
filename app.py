@@ -1,7 +1,8 @@
 from flask import Flask, url_for, render_template, g, request, redirect
 import os
 from flask_sqlalchemy import SQLAlchemy
-from models import Accounts
+import models
+import populateDB
 
 
 app = Flask(__name__)
@@ -18,12 +19,12 @@ def login():
 	error = None
 	if request.method == 'POST':
 		inputEmail = request.form["InputEmail"]
-		actualPassword = Accounts.query.filter_by(email=inputEmail).first()
-		if request.form['InputPassword'] != str(actualPassword):
+		actualPassword = models.Account.query.filter_by(email=inputEmail).first()
+		if request.form['In`putPassword'] != str(actualPassword):
 			error = "Invalid Credentials."
+			return render_template('auth/login.html', error=error)
 		else:
-			return render_template('index.html')
-	return render_template('auth/login.html', error=error)
+			return render_template('dashboard.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -31,34 +32,21 @@ def register():
 		return render_template("auth/register.html")
 	if request.method == "POST":
 		inputCredentials = request.form.to_dict()
-		user = Accounts(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
+		user = models.Account(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
 		db.session.add(user)
 		db.session.commit()
 		return redirect(url_for("index"))
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/dashboard", methods=['GET', 'POST'])
 def index():
-	return render_template("index.html")
-
-@app.route('/update/<int:Id>', methods=['GET', 'POST'])
-def update(Id):
 	if request.method == "GET":
-		staff = query_db("SELECT * FROM staff WHERE Id=?", [Id], one=True)
-		return render_template("update.html", staff=staff)
+		return render_template("dashboard.html")
 	if request.method == "POST":
-		staff = request.form.to_dict()
-		values = [staff["Id"], staff["name"], staff["age"], staff["salary"], staff["work"], Id]
-		change_db("UPDATE staff SET Id=?, Name=?, Age=?, Salary=?, Work=? WHERE Id=?", values)
-		return redirect(url_for("index"))
-
-@app.route('/delete/<int:Id>', methods=['GET', 'POST'])
-def delete(Id):
-	if request.method == "GET":
-		staff = query_db("SELECT * FROM staff WHERE Id=?", [Id], one=True)
-		return render_template("delete.html", staff=staff)
-	if request.method == "POST":
-		change_db("DELETE FROM staff where Id=?", [Id])
-		return redirect(url_for("index"))
+		if request.form['pop'] == 'popcust':
+			populateDB.populateCustomer()
+		if request.form['pop'] == 'poprides':
+			populateDB.populateRide()
+		return render_template('dashboard.html')
 
 if __name__ == '__main__':
 	app.run(host="localhost",port=5010, debug=True)
