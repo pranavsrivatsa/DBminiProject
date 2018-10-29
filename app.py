@@ -1,8 +1,14 @@
-from flask import Flask, url_for, render_template, g, request, redirect
+from flask import Flask, url_for, render_template, g, request, redirect, Markup
 import os
 from flask_sqlalchemy import SQLAlchemy
-import models
+from models import *
 import populateDB
+#import plotGraph
+
+from plotly.graph_objs import Scatter
+import plotly.graph_objs as go
+from plotly.offline import plot
+import numpy as np
 
 
 app = Flask(__name__)
@@ -19,8 +25,8 @@ def login():
 	error = None
 	if request.method == 'POST':
 		inputEmail = request.form["InputEmail"]
-		actualPassword = models.Account.query.filter_by(email=inputEmail).first()
-		if request.form['In`putPassword'] != str(actualPassword):
+		actualPassword = Account.query.filter_by(email=inputEmail).first()
+		if request.form['InputPassword'] != str(actualPassword):
 			error = "Invalid Credentials."
 			return render_template('auth/login.html', error=error)
 		else:
@@ -32,7 +38,7 @@ def register():
 		return render_template("auth/register.html")
 	if request.method == "POST":
 		inputCredentials = request.form.to_dict()
-		user = models.Account(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
+		user = Account(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
 		db.session.add(user)
 		db.session.commit()
 		return redirect(url_for("index"))
@@ -40,12 +46,17 @@ def register():
 @app.route("/dashboard", methods=['GET', 'POST'])
 def index():
 	if request.method == "GET":
-		return render_template("dashboard.html")
-	if request.method == "POST":
+		customerList = Customer.query.all()
+		#customerrides = Customer.query.join(CustomerRides_Table).join(Ride).filter((CustomerRides_Table.c.customerId == Customer.id) and (CustomerRides_Table.c.rideId == Ride.id)).all()
+		customerrides = Customer.query.join(Customer.rides).filter_by(id=Ride.id).all()		
+		return render_template("dashboard.html",customers=customerList,customerRides=customerrides)
+	elif request.method == "POST":
 		if request.form['pop'] == 'popcust':
 			populateDB.populateCustomer()
 		if request.form['pop'] == 'poprides':
 			populateDB.populateRide()
+		if request.form['pop'] == 'startpark':
+			populateDB.populateCustomerRides()
 		return render_template('dashboard.html')
 
 if __name__ == '__main__':

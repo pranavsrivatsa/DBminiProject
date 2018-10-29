@@ -35,6 +35,7 @@
     </div>
     <div class="container">
       {% block content %}Content{% endblock %}
+      {{ div_placeholder }}
     </div>
     <!-- jquery latest version -->
     <script src="{{url_for('static', filename='assets/js/vendor/jquery-2.2.4.min.js')}}"></script>
@@ -49,6 +50,13 @@
     <!-- others plugins -->
     <script src="{{url_for('static', filename='assets/js/plugins.js')}}"></script>
     <script src="{{url_for('static', filename='assets/js/scripts.js')}}"></script>
+    <script>
+      $(function(){
+      	$('#OverflowTable').slimScroll({
+          height: '350px'
+        });
+      });
+    </script>
 </body>
 
 </html>

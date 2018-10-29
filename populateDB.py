@@ -12,6 +12,15 @@ db.init_app(app)
 
 fake = Faker()
 
+def populateCustomerRides():
+    customerList = models.Customer.query.all()
+    rideList = models.Ride.query.all()
+    while True:
+        customer = random.choice(customerList)
+        ride = random.choice(rideList)
+        db.session.execute(models.CustomerRides_Table.insert().values([(customer.id,ride.id)]))
+        db.session.commit()
+
 def populateCustomer():
     count = 100
     type_list = ['normal','student']

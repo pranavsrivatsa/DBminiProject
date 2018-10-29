@@ -30,8 +30,8 @@ class Account(db.Model):
         return self.password
 
 CustomerRides_Table = db.Table('customerrides',
-    db.Column('customerId',db.Integer, db.ForeignKey('customer.id')),
-    db.Column('rideId',db.Integer, db.ForeignKey('ride.id'))
+    db.Column('customerId',db.Integer, db.ForeignKey('customer.id'),primary_key=True),
+    db.Column('rideId',db.Integer, db.ForeignKey('ride.id'), primary_key=True)
     )
 
 class Customer(db.Model):
@@ -42,9 +42,6 @@ class Customer(db.Model):
     type = db.Column(db.String(128), nullable=False)
     rides = db.relationship('Ride', secondary=CustomerRides_Table, lazy='subquery',
         backref=db.backref('customers', lazy=True))
-
-    def __repr__(self):
-        return self.type
 
 class Ride(db.Model):
     __tablename__ = 'ride'
