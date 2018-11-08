@@ -3,12 +3,6 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from models import *
 import populateDB
-#import plotGraph
-
-from plotly.graph_objs import Scatter
-import plotly.graph_objs as go
-from plotly.offline import plot
-import numpy as np
 
 
 app = Flask(__name__)
@@ -20,8 +14,6 @@ db.init_app(app)
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
-	if request.method == 'GET':
-		return render_template("auth/login.html")
 	error = None
 	if request.method == 'POST':
 		inputEmail = request.form["InputEmail"]
@@ -31,33 +23,32 @@ def login():
 			return render_template('auth/login.html', error=error)
 		else:
 			return render_template('dashboard.html')
+	else:
+		return render_template("auth/login.html")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	if request.method == "GET":
-		return render_template("auth/register.html")
 	if request.method == "POST":
 		inputCredentials = request.form.to_dict()
 		user = Account(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
 		db.session.add(user)
 		db.session.commit()
 		return redirect(url_for("index"))
+	else:
+		return render_template("auth/register.html")
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def index():
-	if request.method == "GET":
-		customerList = Customer.query.all()
-		#customerrides = Customer.query.join(CustomerRides_Table).join(Ride).filter((CustomerRides_Table.c.customerId == Customer.id) and (CustomerRides_Table.c.rideId == Ride.id)).all()
-		customerrides = Customer.query.join(Customer.rides).filter_by(id=Ride.id).all()		
-		return render_template("dashboard.html",customers=customerList,customerRides=customerrides)
-	elif request.method == "POST":
+	customerList = Customer.query.all()
+	customerrides = Customer.query.join(Customer.rides).filter_by(id=Ride.id).all()
+	if request.method == "POST":
 		if request.form['pop'] == 'popcust':
 			populateDB.populateCustomer()
 		if request.form['pop'] == 'poprides':
 			populateDB.populateRide()
 		if request.form['pop'] == 'startpark':
-			populateDB.populateCustomerRides()
-		return render_template('dashboard.html')
+			populateDB.populateCustomerRides()		
+	return render_template("dashboard.html",customers=customerList,customerRides=customerrides)
 
 if __name__ == '__main__':
 	app.run(host="localhost",port=5010, debug=True)

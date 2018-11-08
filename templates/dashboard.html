@@ -160,8 +160,7 @@
                     <div class="card-body">
                         <h4 class="header-title">Customer List</h4>
                         <div id="OverflowTable" class="table-responsive">
-                            <table class="dbkit-table">
-                                <tbody>
+                            <table id="ContentsTable" class="dbkit-table">
                                   <thead>
                                     <tr class="heading-td">
                                         <td>Name</td>
@@ -169,6 +168,7 @@
                                         <td>Type</td>
                                     </tr>
                                   </thead>
+                                  <tbody>
                                     {% for customer in customers: %}
                                     <tr>
                                         <td>{{ customer.name }}</td>
@@ -195,7 +195,7 @@
                                     </select>
                                 </div>
                                 <div id="OverflowTable" class="table-responsive">
-                                    <table class="dbkit-table">
+                                    <table id="ContentsTable" class="dbkit-table">
                                         <tbody>
                                           <thead>
                                             <tr class="heading-td">
@@ -206,7 +206,7 @@
                                             {% for customer in customerRides: %}
                                                 {% for ride in customer.rides: %}
                                                 <tr>
-                                                  <td>{{ tuple.name }}</td>
+                                                  <td>{{ customer.name }}</td>
                                                   <td>{{ ride.name }}</td>
                                                 </tr>
                                                 {% endfor %}
