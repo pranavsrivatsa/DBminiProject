@@ -3,7 +3,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from models import *
 import populateDB
-
+import json
 
 app = Flask(__name__)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://dbbkiputbafcju:3477b7be42046136fa9d2dec76b7b397933f1314dcbf136a64e1d1288185663a@ec2-54-83-29-34.compute-1.amazonaws.com:5432/d78tp1vprns7ma?sslmode=require'
@@ -22,7 +22,7 @@ def login():
 			error = "Invalid Credentials."
 			return render_template('auth/login.html', error=error)
 		else:
-			return render_template('dashboard.html')
+			return redirect('/dashboard')
 	else:
 		return render_template("auth/login.html")
 
@@ -39,16 +39,20 @@ def register():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def index():
-	customerList = Customer.query.all()
-	customerrides = Customer.query.join(Customer.rides).filter_by(id=Ride.id).all()
-	if request.method == "POST":
-		if request.form['pop'] == 'popcust':
-			populateDB.populateCustomer()
-		if request.form['pop'] == 'poprides':
-			populateDB.populateRide()
-		if request.form['pop'] == 'startpark':
-			populateDB.populateCustomerRides()		
-	return render_template("dashboard.html",customers=customerList,customerRides=customerrides)
+    customerList = Customer.query.all()
+    customerrides = Customer.query.join(Customer.rides).filter_by(id=Ride.id).all()
+    ageList = []
+    for customer in customerList:
+        ageList.append(customer.age)
+    if request.method == "POST":
+        if request.form['pop'] == 'popcust':
+            populateDB.populateCustomer()
+        if request.form['pop'] == 'poprides':
+            populateDB.populateRide()
+        if request.form['pop'] == 'startpark':
+            populateDB.populateCustomerRides()
+    return render_template("dashboard.html",customers=customerList,customerRides=customerrides,ages=ageList)
+
 
 if __name__ == '__main__':
 	app.run(host="localhost",port=5010, debug=True)

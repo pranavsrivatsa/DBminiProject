@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from faker import Faker
 import models
 import random
+import json
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
