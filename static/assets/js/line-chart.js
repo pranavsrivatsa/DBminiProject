@@ -461,7 +461,6 @@ function renderGraph(ages){
           ]
       });
   }
-
 };
 /*--------------  END visitor graph line chart start ------------*/
 
