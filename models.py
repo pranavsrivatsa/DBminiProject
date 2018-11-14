@@ -30,6 +30,14 @@ class Account(db.Model):
     def __repr__(self):
         return self.password
 
+<<<<<<< HEAD
+=======
+CustomerRides_Table = db.Table('customerrides',
+    db.Column('customerId',db.Integer, db.ForeignKey('customer.id'),primary_key=False),
+    db.Column('rideId',db.Integer, db.ForeignKey('ride.id'), primary_key=False)
+    )
+
+>>>>>>> customerrides primary key as false
 class Customer(db.Model):
     __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)
