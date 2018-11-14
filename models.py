@@ -1,4 +1,4 @@
-import json
+#import json
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
@@ -6,12 +6,11 @@ from flask_migrate import Migrate, MigrateCommand
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
-'''
->python3 models.py db --help
->python3 models.py db init
->python3 models.py db migrate
->python3 models.py db upgrade
-'''
+# >python3 models.py db --help
+# >python3 models.py db init
+# >python3 models.py db migrate
+# >python3 models.py db upgrade
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'

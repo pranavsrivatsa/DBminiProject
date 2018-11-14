@@ -45,7 +45,7 @@ def populateRide():
     ride_list = ['Carousel','Dark ride','Drop tower','Ferris wheel','Gravity ride','Gyro tower','Pendulum ride','Roller coaster','Simulator ride','Swing ride','Water ride','Spiral Slide ride','Circus','Enterprise','Gravitron']
     for ride in ride_list:
         name = ride
-        price = random.randint(100,250)
+        price = (random.randint(20,30)) * 10
         rideDetails = models.Ride(name=name,price=price)
         db.session.add(rideDetails)
         db.session.commit()
