@@ -47,8 +47,8 @@ class Account(db.Model):
         return self.password
 
 CustomerRides_Table = db.Table('customerrides',
-    db.Column('customerId',db.Integer, db.ForeignKey('customer.id'),primary_key=True),
-    db.Column('rideId',db.Integer, db.ForeignKey('ride.id'), primary_key=True)
+    db.Column('customerId',db.Integer, db.ForeignKey('customer.id'),primary_key=False),
+    db.Column('rideId',db.Integer, db.ForeignKey('ride.id'), primary_key=False)
     )
 
 class Customer(db.Model):
