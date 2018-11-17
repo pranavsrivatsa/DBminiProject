@@ -2,8 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from sqlalchemy.ext.declarative import DeclarativeMeta
-import json
+from datetime import datetime
 
 """
 >python3 models.py db --help
@@ -21,21 +20,6 @@ migrate = Migrate(app,db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
-
-class AlchemyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj.__class__, DeclarativeMeta):
-            fields = {}
-            for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
-                data = obj.__getattribute__(field)
-                try:
-                    json.dumps(data) # this will fail on non-encodable values, like other classes
-                    fields[field] = data
-                except TypeError:
-                    fields[field] = None
-            return fields
-        return json.JSONEncoder.default(self, obj)
-
 class Account(db.Model):
     __tablename__ = 'account'
     id = db.Column(db.Integer, primary_key=True)
@@ -46,19 +30,13 @@ class Account(db.Model):
     def __repr__(self):
         return self.password
 
-CustomerRides_Table = db.Table('customerrides',
-    db.Column('customerId',db.Integer, db.ForeignKey('customer.id'),primary_key=True),
-    db.Column('rideId',db.Integer, db.ForeignKey('ride.id'), primary_key=True)
-    )
-
 class Customer(db.Model):
     __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
-    age = db.Column(db.String(128), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
     type = db.Column(db.String(128), nullable=False)
-    rides = db.relationship('Ride', secondary=CustomerRides_Table, lazy='subquery',
-        backref=db.backref('customers', lazy=True))
+    rides = db.relationship('CustomerRidesLink')
 
 class Ride(db.Model):
     __tablename__ = 'ride'
@@ -68,6 +46,16 @@ class Ride(db.Model):
 
     def __repr__(self):
         return self.price
+
+class CustomerRidesLink(db.Model):
+    __tablename__ = 'customerrides'
+    id = db.Column(db.Integer, primary_key=True)
+    customerId = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    rideId = db.Column(db.Integer, db.ForeignKey('ride.id'))
+    customer = db.relationship('Customer',uselist=False)
+    ride = db.relationship('Ride',uselist=False)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
 
 if __name__=='__main__':
     manager.run()

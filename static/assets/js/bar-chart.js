@@ -1,5 +1,6 @@
-/*--------------  coin_sales4 bar chart start ------------*/
-function renderGraph(ages){
+/*--------------  customer age group bar chart start ------------*/
+function renderGraph(ageRanges){
+  glabels = ["0-10","11-18","19-30","31-50","51-70","71-100"]
   if ($('#visitor_graph').length) {
       var ctx = document.getElementById("visitor_graph").getContext('2d');
       var chart = new Chart(ctx, {
@@ -7,10 +8,10 @@ function renderGraph(ages){
           type: 'bar',
           // The data for our dataset
           data: {
-              labels: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+              labels: glabels,
               datasets: [{
-                  label: "Sales",
-                  data: ages,
+                  label: "Count",
+                  data: ageRanges,
                   backgroundColor: [
                       '#8416fe',
                       '#3a3afb',
@@ -63,7 +64,7 @@ function renderGraph(ages){
   }
 };
 
-/*--------------  coin_sales4 bar chart End ------------*/
+/*--------------  customer age group bar chart start ------------*/
 
 /*--------------  coin_sales5 bar chart start ------------*/
 if ($('#coin_sales5').length) {

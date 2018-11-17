@@ -31,18 +31,29 @@
         <!-- page title area end -->
         <div class="main-content-inner">
             <!-- visitor graph area start -->
-            <div class="card mt-5">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-5">
-                        <h4 class="header-title mb-0">Visitor Graph</h4>
-                    </div>
-                    <!-- canvas id="visitor_graph" class="chart"></canvas -->
-                    <div id="visitor_graph"></div>
-                </div>
+            <div class="row">
+              <div class="col-lg-6 mt-5">
+                  <div class="card">
+                      <div class="card-body">
+                          <h4 class="header-title mb-0">Visitor Graph</h4>
+                          <canvas id="visitor_graph" class="chart"></canvas>
+                      </div>
+                  </div>
+              </div>
+              <!-- visitor graph area end -->
+              <!-- customerrides graph area start -->
+              <div class="col-lg-6 mt-5">
+                  <div class="card">
+                      <div class="card-body">
+                          <h4 class="header-title mb-0">Rides Graph</h4>
+                          <div id="chartdiv" style="width : 100%; height : 500px"></div>
+                      </div>
+                  </div>
+              </div>
             </div>
-            <!-- visitor graph area end -->
+            <!-- customerrides graph area end -->
             <!-- order list area start -->
-            <div class="col-12 mt-5">
+            <div class="col-6 mt-5">
               <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">Customer List</h4>
@@ -71,7 +82,7 @@
           </div>
             <!-- order list area end -->
                 <!-- product sold area start -->
-                <div class="col-12 mt-5">
+                <!--div class="col-12 mt-5">
                   <div class="card">
                     <div class="card-body">
                         <h4 class="header-title">Customer Rides</h4>
@@ -81,23 +92,23 @@
                               <tr>
                                 <td>Customer</td>
                                 <td>Ride</td>
+                                <td>Time</td>
                               </tr>
                             </thead>
                             <tbody>
                               {% for customer in customerRides: %}
-                                  {% for ride in customer.rides: %}
                                   <tr>
-                                    <td>{{ customer.name }}</td>
-                                    <td>{{ ride.name }}</td>
+                                    <td>{{ customer.customerId }}</td>
+                                    <td>{{ customer.rideId }}</td>
+                                    <td>{{ customer.time.strftime("%B %d, %y") }}</td>
                                   </tr>
-                                  {% endfor %}
                               {% endfor %}
                             </tbody>
                           </table>
                         </div>
                       </div>
                     </div>
-                </div>
+                </div-->
                 <!-- product sold area end -->
             </div>
         </div>
