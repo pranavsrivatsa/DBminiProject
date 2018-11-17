@@ -46,6 +46,7 @@ def populateRide():
     for ride in ride_list:
         name = ride
         price = (random.randint(20,30)) * 10
-        rideDetails = models.Ride(name=name,price=price)
+        maintenance_cost = (random.randint(20,30)) * 100
+        rideDetails = models.Ride(name=name,price=price,maintenance_cost=maintenance_cost)
         db.session.add(rideDetails)
         db.session.commit()

@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import DeclarativeMeta
 # >python3 models.py db --help
 # >python3 models.py db init
 # >python3 models.py db migrate
-# >python3 models.py db upgrade
+# >python3 models.py db upgrade 
 
 
 app = Flask(__name__)
@@ -50,10 +50,11 @@ class Account(db.Model):
 
 
 CustomerRides_Table = db.Table('customerrides',
-                               db.Column('customerId', db.Integer, db.ForeignKey(
+                                db.Column('customerId', db.Integer, db.ForeignKey(
                                    'customer.id'), primary_key=False),
-                               db.Column('rideId', db.Integer, db.ForeignKey(
+                                db.Column('rideId', db.Integer, db.ForeignKey(
                                    'ride.id'), primary_key=False)
+                                db.Column('date')
                                )
 
 
@@ -72,6 +73,7 @@ class Ride(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
     price = db.Column(db.Integer, nullable=False)
+    maintenance_cost = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return self.price
