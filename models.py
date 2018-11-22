@@ -68,12 +68,12 @@ class CustomerRidesLink(db.Model):
     ride = db.relationship('Ride',uselist=False)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-# class Revenue(db.Model):
-#     __tablename__ = 'revenue'
-#     id = db.Column(db.Integer, primary_key=True)
-#     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     day_rev = db.Column(db.ARRAY(Integer))
-#     count_per_ride = db.Column(db.ARRAY(Integer))
+class Revenue(db.Model):
+    __tablename__ = 'revenue'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    day_rev = db.Column(db.Integer)
+    count_per_ride = db.Column(db.Integer)
 
 if __name__=='__main__':
     manager.run()
