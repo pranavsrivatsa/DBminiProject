@@ -1,21 +1,22 @@
+#import json
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from datetime import datetime
 
-"""
->python3 models.py db --help
->python3 models.py db init
->python3 models.py db migrate
->python3 models.py db upgrade
-"""
+
+# >python3 models.py db --help
+# >python3 models.py db init
+# >python3 models.py db migrate
+# >python3 models.py db upgrade 
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-migrate = Migrate(app,db)
+migrate = Migrate(app, db)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
@@ -30,10 +31,15 @@ class Account(db.Model):
     def __repr__(self):
         return self.password
 
+
 # CustomerRides_Table = db.Table('customerrides',
-#     db.Column('customerId',db.Integer, db.ForeignKey('customer.id'),primary_key=False),
-#     db.Column('rideId',db.Integer, db.ForeignKey('ride.id'), primary_key=False)
-#     )
+#                                 db.Column('customerId', db.Integer, db.ForeignKey(
+#                                    'customer.id'), primary_key=False),
+#                                 db.Column('rideId', db.Integer, db.ForeignKey(
+#                                    'ride.id'), primary_key=False)
+#                                 db.Column('date',db.)
+#                                )
+
 
 class Customer(db.Model):
     __tablename__ = 'customer'
@@ -48,6 +54,7 @@ class Ride(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
     price = db.Column(db.Integer, nullable=False)
+    maintenance_cost = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return self.price
@@ -61,6 +68,12 @@ class CustomerRidesLink(db.Model):
     ride = db.relationship('Ride',uselist=False)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+# class Revenue(db.Model):
+#     __tablename__ = 'revenue'
+#     id = db.Column(db.Integer, primary_key=True)
+#     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+#     day_rev = db.Column(db.ARRAY(Integer))
+#     count_per_ride = db.Column(db.ARRAY(Integer))
 
 if __name__=='__main__':
     manager.run()
