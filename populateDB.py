@@ -53,7 +53,7 @@ def populateCustomer():
         count -= 1
 
 def populateRide():
-    ride_list = ['Carousel','Dark ride','Drop tower','Ferris wheel','Gravity ride','Gyro tower','Pendulum ride','Roller coaster','Simulator ride','Swing ride','Water ride','Spiral Slide ride','Circus','Enterprise','Gravitron']
+    ride_list = ['Carousel','Dark ride','Drop tower','Ferris wheel','Gyro tower','Roller coaster','Water ride','Spiral Slide','Circus','Gravitron']
     for ride in ride_list:
         name = ride
         price = (random.randint(20,30)) * 10

@@ -64,16 +64,87 @@ class CustomerRidesLink(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customer.id'))
     rideId = db.Column(db.Integer, db.ForeignKey('ride.id'))
-    customer = db.relationship('Customer',uselist=False)
-    ride = db.relationship('Ride',uselist=False)
+    customer = db.relationship('Customer')
+    ride = db.relationship('Ride')
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-class Revenue(db.Model):
-    __tablename__ = 'revenue'
+class day(db.Model):
+    __tablename__ = 'daydetails'
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     day_rev = db.Column(db.Integer)
     count_per_ride = db.Column(db.Integer)
+
+class dayrev(db.Model):
+    __tablename__ = 'dayrev'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Dark ride = db.Column(db.Integer)
+    Drop tower = db.Column(db.Integer)
+    Ferris wheel = db.Column(db.Integer)
+    Gyro tower = db.Column(db.Integer)
+    Roller coaster = db.Column(db.Integer)
+    Water ride = db.Column(db.Integer)
+    Spiral Slide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+
+class daycount(db.Model):
+    __tablename__ = 'daycount'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Dark ride = db.Column(db.Integer)
+    Drop tower = db.Column(db.Integer)
+    Ferris wheel = db.Column(db.Integer)
+    Gyro tower = db.Column(db.Integer)
+    Roller coaster = db.Column(db.Integer)
+    Water ride = db.Column(db.Integer)
+    Spiral Slide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+
+class month(db.Model):
+    __tablename__ = 'monthdetails'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    day_rev = db.Column(db.Integer)
+    count_per_ride = db.Column(db.Integer)
+
+class monthrev(db.Model):
+    __tablename__ = 'monthrev'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Dark ride = db.Column(db.Integer)
+    Drop tower = db.Column(db.Integer)
+    Ferris wheel = db.Column(db.Integer)
+    Gyro tower = db.Column(db.Integer)
+    Roller coaster = db.Column(db.Integer)
+    Water ride = db.Column(db.Integer)
+    Spiral Slide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+
+class monthcount(db.Model):
+    __tablename__ = 'monthcount'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Dark ride = db.Column(db.Integer)
+    Drop tower = db.Column(db.Integer)
+    Ferris wheel = db.Column(db.Integer)
+    Gyro tower = db.Column(db.Integer)
+    Roller coaster = db.Column(db.Integer)
+    Water ride = db.Column(db.Integer)
+    Spiral Slide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
 
 if __name__=='__main__':
     manager.run()
