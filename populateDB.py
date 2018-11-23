@@ -15,20 +15,14 @@ db.init_app(app)
 def change():
     global a
     a = 0
-    print(a)
-    print('lo')
 
 fake = Faker()
 
 def populateCustomerRides():
-    x = True
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
     tim = datetime.datetime.now()
-    while x:
-        print(x)
-        print(a)
-        print('its a')
+    while True:
         if a is 0:
             break
         customer = random.choice(customerList)

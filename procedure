@@ -1,12 +1,4 @@
-CREATE OR REPLACE FUNCTION update_dayrev()
-    RETURNS trigger AS
-$BODY$
-BEGIN
-    INSERT INTO dayrev(time,day_rev,count_per_day) values()
-
-
-
-CREATE OR REPLACE FUNCTION get_day_stats(INOUT )
+CREATE OR REPLACE FUNCTION get_day_stats(INOUT)
     RETURNS TRIGGER AS $day_stats$
 BEGIN
     cur_rides CURSOR() FOR (SELECT time,rideId FROM customerrides where rideId = id);
@@ -24,7 +16,7 @@ $day_stats$ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER update_dayrev AFTER INSERT ON customerrides
-FOR EACH ROW 
+FOR EACH STATEMENT
 BEGIN
     SET @lastID = (SELECT id FROM customerrides ORDER BY id DESC LIMIT 1);
     EXECUTE PROCEDURE get_day_stats(@lastID);
