@@ -1,0 +1,31 @@
+CREATE OR REPLACE FUNCTION update_dayrev()
+    RETURNS trigger AS
+$BODY$
+BEGIN
+    INSERT INTO dayrev(time,day_rev,count_per_day) values()
+
+
+
+CREATE OR REPLACE FUNCTION get_day_stats(INOUT )
+    RETURNS TRIGGER AS $day_stats$
+BEGIN
+    cur_rides CURSOR() FOR (SELECT time,rideId FROM customerrides where rideId = id);
+    OPEN cur_rides;
+    FOR entry IN cur_rides        
+    LOOP 
+        rideName := 'SELECT name from ride where id=%d',entry.rideId;
+        ridePrice := 'SELECT price from ride where id=%d',entry.rideId;
+        INSERT INTO ride (time, rideName)
+        VALUES (entry.time::timestamp::date,ridePrice)
+        ON CONFLICT (did) DO UPDATE SET rideName = ridePrice;
+    END LOOP;
+END;
+$day_stats$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER update_dayrev AFTER INSERT ON customerrides
+FOR EACH ROW 
+BEGIN
+    SET @lastID = (SELECT id FROM customerrides ORDER BY id DESC LIMIT 1);
+    EXECUTE PROCEDURE get_day_stats(@lastID);
+END;
