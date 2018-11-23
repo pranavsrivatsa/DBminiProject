@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION get_day_stats()
+RETURNS trigger AS $$
+DECLARE
+    rideName varchar(50) := 'A';
+    ridePrice integer := 0;
+BEGIN            
+   rideName := select name from ride where id=new.rideId;
+   ridePrice := select price from ride where id=new.rideId;
+   INSERT INTO dayrev (time,rideName) VALUES (new.time::timestamp::date,ridePrice);
+   return new;
+END;$$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER update_dayrev AFTER INSERT ON customerrides
+FOR EACH ROW EXECUTE PROCEDURE get_day_stats();
