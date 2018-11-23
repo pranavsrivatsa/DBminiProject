@@ -71,14 +71,14 @@ class CustomerRidesLink(db.Model):
 class day(db.Model):
     __tablename__ = 'daydetails'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    time = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     day_rev = db.Column(db.Integer)
     count_per_ride = db.Column(db.Integer)
 
 class dayrev(db.Model):
     __tablename__ = 'dayrev'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -94,7 +94,7 @@ class dayrev(db.Model):
 class daycount(db.Model):
     __tablename__ = 'daycount'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -110,14 +110,14 @@ class daycount(db.Model):
 class month(db.Model):
     __tablename__ = 'monthdetails'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    time = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     day_rev = db.Column(db.Integer)
     count_per_ride = db.Column(db.Integer)
 
 class monthrev(db.Model):
     __tablename__ = 'monthrev'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -133,7 +133,7 @@ class monthrev(db.Model):
 class monthcount(db.Model):
     __tablename__ = 'monthcount'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)

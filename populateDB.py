@@ -4,6 +4,7 @@ from faker import Faker
 import models
 import random
 import datetime
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
@@ -11,19 +12,32 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
 
+def change():
+    global a
+    a = 0
+    print(a)
+    print('lo')
+
 fake = Faker()
 
 def populateCustomerRides():
+    x = True
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
-    time = datetime.datetime.now()
-    while True:
+    tim = datetime.datetime.now()
+    while x:
+        print(x)
+        print(a)
+        print('its a')
+        if a is 0:
+            break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
-        newTime = time + datetime.timedelta(0,3) # days, seconds, then other fields.
-        time = newTime
+        newTime = tim + datetime.timedelta(0,60) # days, seconds, then other fields.
+        tim = newTime
+        time.sleep(5) 
         #db.session.execute(models.CustomerRides_Table.insert().values([(customer.id,ride.id,time)]))
-        customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=time)
+        customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=tim)
         db.session.add(customerride)
         db.session.commit()
 
@@ -61,3 +75,6 @@ def populateRide():
         rideDetails = models.Ride(name=name,price=price,maintenance_cost=maintenance_cost)
         db.session.add(rideDetails)
         db.session.commit()
+
+a = 1
+
