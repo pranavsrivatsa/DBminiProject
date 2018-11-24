@@ -15,27 +15,21 @@ db.init_app(app)
 def change():
     global a
     a = 0
-    print(a)
-    print('lo')
 
 fake = Faker()
 
 def populateCustomerRides():
-    x = True
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
     tim = datetime.datetime.now()
-    while x:
-        print(x)
-        print(a)
-        print('its a')
+    while True:
         if a is 0:
             break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
         newTime = tim + datetime.timedelta(0,60) # days, seconds, then other fields.
         tim = newTime
-        time.sleep(5) 
+        time.sleep(5)
         #db.session.execute(models.CustomerRides_Table.insert().values([(customer.id,ride.id,time)]))
         customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=tim)
         db.session.add(customerride)
@@ -67,7 +61,7 @@ def populateCustomer():
         count -= 1
 
 def populateRide():
-    ride_list = ['Carousel','Dark ride','Drop tower','Ferris wheel','Gyro tower','Roller coaster','Water ride','Spiral Slide','Circus','Gravitron']
+    ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
     for ride in ride_list:
         name = ride
         price = (random.randint(20,30)) * 10
@@ -77,4 +71,3 @@ def populateRide():
         db.session.commit()
 
 a = 1
-

@@ -52,7 +52,6 @@ def index():
 	        populateDB.populateCustomerRides()
 	    if request.form['pop'] == 'stoppark':
 		    populateDB.change()
-		    print(str(populateDB.a) + 'yo')
 	return render_template("dashboard.html",customers=customerList,customerRides=customerrides,ageRanges=ageList)
 
 
