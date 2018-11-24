@@ -40,19 +40,20 @@ def register():
 @app.route("/dashboard", methods=['GET', 'POST'])
 def index():
 	customerList = Customer.query.all()
-	#customerrides = Customer.query.join(Customer.rides).filter_by(id=Ride.id).all()
 	customerrides = CustomerRidesLink.query.all()
-	ageList = graph.getAgeRanges()
 	if request.method == "POST":
 	    if request.form['pop'] == 'popcust':
 	        populateDB.populateCustomer()
-	    if request.form['pop'] == 'poprides':
-	        populateDB.populateRide()
 	    if request.form['pop'] == 'startpark':
 	        populateDB.populateCustomerRides()
 	    if request.form['pop'] == 'stoppark':
 		    populateDB.change()
-	return render_template("dashboard.html",customers=customerList,customerRides=customerrides,ageRanges=ageList)
+	return render_template("dashboard.html",customers=customerList,customerRides=customerrides)
+
+@app.route("/graphs",methods=['GET'])
+def getGraph():
+	ageList = graph.getAgeRanges()
+	return render_template("graphs.html",ageRanges=ageList)
 
 
 if __name__ == '__main__':

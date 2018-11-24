@@ -4,18 +4,22 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from datetime import datetime
+from alembic import op
+import populateDB
 
 
-# >python3 models.py db --help
+# >rm -R migrations
 # >python3 models.py db init
 # >python3 models.py db migrate
-# >python3 models.py db upgrade 
+# >python3 models.py db upgrade
+# >python3 models.py seed
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
 manager = Manager(app)
@@ -30,16 +34,6 @@ class Account(db.Model):
 
     def __repr__(self):
         return self.password
-
-
-# CustomerRides_Table = db.Table('customerrides',
-#                                 db.Column('customerId', db.Integer, db.ForeignKey(
-#                                    'customer.id'), primary_key=False),
-#                                 db.Column('rideId', db.Integer, db.ForeignKey(
-#                                    'ride.id'), primary_key=False)
-#                                 db.Column('date',db.)
-#                                )
-
 
 class Customer(db.Model):
     __tablename__ = 'customer'
@@ -56,9 +50,6 @@ class Ride(db.Model):
     price = db.Column(db.Integer, nullable=False)
     maintenance_cost = db.Column(db.Integer, nullable=False)
 
-    def __repr__(self):
-        return self.price
-
 class CustomerRidesLink(db.Model):
     __tablename__ = 'customerrides'
     id = db.Column(db.Integer, primary_key=True)
@@ -71,80 +62,42 @@ class CustomerRidesLink(db.Model):
 class day(db.Model):
     __tablename__ = 'daydetails'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-    day_rev = db.Column(db.Integer)
-    count_per_ride = db.Column(db.Integer)
+    day = db.Column(db.Date)
+    revenue = db.Column(db.Integer)
+    count = db.Column(db.Integer)
 
 class dayrev(db.Model):
     __tablename__ = 'dayrev'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
-    Carousel = db.Column(db.Integer)
-    Darkride = db.Column(db.Integer)
-    Droptower = db.Column(db.Integer)
-    Ferriswheel = db.Column(db.Integer)
-    Gyrotower = db.Column(db.Integer)
-    Rollercoaster = db.Column(db.Integer)
-    Waterride = db.Column(db.Integer)
-    SpiralSlide = db.Column(db.Integer)
-    Circus = db.Column(db.Integer)
-    Gravitron = db.Column(db.Integer)
-
-
-class daycount(db.Model):
-    __tablename__ = 'daycount'
-    id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
-    Carousel = db.Column(db.Integer)
-    Darkride = db.Column(db.Integer)
-    Droptower = db.Column(db.Integer)
-    Ferriswheel = db.Column(db.Integer)
-    Gyrotower = db.Column(db.Integer)
-    Rollercoaster = db.Column(db.Integer)
-    Waterride = db.Column(db.Integer)
-    SpiralSlide = db.Column(db.Integer)
-    Circus = db.Column(db.Integer)
-    Gravitron = db.Column(db.Integer)
-
+    day = db.Column(db.Date, nullable = False)
+    rideId = db.Column(db.Integer, db.ForeignKey('ride.id'))
+    ride = db.relationship('Ride')
+    revenue = db.Column(db.Integer)
+    count = db.Column(db.Integer)
 
 class month(db.Model):
     __tablename__ = 'monthdetails'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-    day_rev = db.Column(db.Integer)
-    count_per_ride = db.Column(db.Integer)
+    month = db.Column(db.Date)
+    revenue = db.Column(db.Integer)
+    count = db.Column(db.Integer)
 
 class monthrev(db.Model):
     __tablename__ = 'monthrev'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
-    Carousel = db.Column(db.Integer)
-    Darkride = db.Column(db.Integer)
-    Droptower = db.Column(db.Integer)
-    Ferriswheel = db.Column(db.Integer)
-    Gyrotower = db.Column(db.Integer)
-    Rollercoaster = db.Column(db.Integer)
-    Waterride = db.Column(db.Integer)
-    SpiralSlide = db.Column(db.Integer)
-    Circus = db.Column(db.Integer)
-    Gravitron = db.Column(db.Integer)
+    month = db.Column(db.Date)
+    rideId = db.Column(db.Integer, db.ForeignKey('ride.id'))
+    ride = db.relationship('Ride')
+    revenue = db.Column(db.Integer)
+    count = db.Column(db.Integer)
 
-
-class monthcount(db.Model):
-    __tablename__ = 'monthcount'
-    id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.Date, default=datetime.utcnow, nullable = False)
-    Carousel = db.Column(db.Integer)
-    Darkride = db.Column(db.Integer)
-    Droptower = db.Column(db.Integer)
-    Ferriswheel = db.Column(db.Integer)
-    Gyrotower = db.Column(db.Integer)
-    Rollercoaster = db.Column(db.Integer)
-    Waterride = db.Column(db.Integer)
-    SpiralSlide = db.Column(db.Integer)
-    Circus = db.Column(db.Integer)
-    Gravitron = db.Column(db.Integer)
-
+@manager.command
+def seed():
+    populateDB.populateRide()
+    for i in range(1,11):
+        db.session.add(dayrev(id=i,day=datetime(2018,1,1),rideId=i,revenue=0,count=0))
+        db.session.add(monthrev(id=i,month=datetime(2018,1,1),rideId=i,revenue=0,count=0))
+        db.session.commit()
 
 if __name__=='__main__':
     manager.run()

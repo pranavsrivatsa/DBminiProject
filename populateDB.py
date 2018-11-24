@@ -19,6 +19,7 @@ def change():
 fake = Faker()
 
 def populateCustomerRides():
+    a = 1
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
     tim = datetime.datetime.now()
@@ -30,7 +31,6 @@ def populateCustomerRides():
         newTime = tim + datetime.timedelta(0,60) # days, seconds, then other fields.
         tim = newTime
         time.sleep(5)
-        #db.session.execute(models.CustomerRides_Table.insert().values([(customer.id,ride.id,time)]))
         customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=tim)
         db.session.add(customerride)
         db.session.commit()

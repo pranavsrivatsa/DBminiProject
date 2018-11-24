@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block header %}
+  {% block title %}Staff details{% endblock %}
+  {% block met %}<meta http-equiv="refresh" content="50" >{% endblock %}
+{% endblock %}
+{% block content %}
+<div class="page-container">
+  <form action="dashboard" method="post">
+    <!-- main content area start -->
+    <div class="main-content">
+        <!-- page title area start -->
+        <div class="page-title-area">
+            <div class="row align-items-center">
+              <div class="card">
+                <div class="col-sm-6">
+                    <div class="breadcrumbs-area clearfix">
+                        <h4 class="page-title pull-left">Dashboard</h4>
+                        <ul class="breadcrumbs pull-left">
+                            <li><a href="index.html">Home</a></li>
+                            <li><span>Dashboard</span></li>
+                        </ul>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="main-content-inner">
+          <!-- visitor graph area start -->
+          <div class="row">
+            <div class="col-lg-6 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-0">Visitor Graph</h4>
+                        <canvas id="visitor_graph" class="chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- visitor graph area end -->
+            <!-- customerrides graph area start>
+            <div class="col-lg-6 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-0">Rides Graph</h4>
+                        <div id="chartdiv" style="width : 100%; height : 500px"></div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <customerrides graph area end -->
+          </div>
+        </div>
+      </div>
+      <!-- footer area start-->
+      <footer>
+          <div class="footer-area">
+              <p>© Copyright 2018 . All right reserved</p>
+          </div>
+      </footer>
+      <!-- footer area end-->
+  <!-- page container area end -->
+  </form>
+</div>
+{% endblock %}
