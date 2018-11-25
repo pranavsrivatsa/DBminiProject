@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from faker import Faker
 import models
 import random
-import datetime
+from datetime import datetime, timedelta
 import time
 
 app = Flask(__name__)
@@ -19,19 +19,25 @@ def change():
 fake = Faker()
 
 def populateCustomerRides():
-    a = 1
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
-    tim = datetime.datetime.now()
+    tim = datetime(2018,12,27,10,0)
     while True:
         if a is 0:
             break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
-        newTime = tim + datetime.timedelta(0,60) # days, seconds, then other fields.
-        tim = newTime
-        time.sleep(5)
-        customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=tim)
+        newTime = tim + timedelta(0,300) # days, seconds, then other fields.
+        if newTime.hour == 18:
+            tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
+            if newTime.day == 28:
+                if newTime.month < 12:
+                    tim = datetime(newTime.year,newTime.month+1,newTime.day,10,00)
+                if newTime.month == 12:
+                    tim = datetime(newTime.year+1,1,1,10,00)
+        else:
+            tim = newTime
+        customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=newTime)
         db.session.add(customerride)
         db.session.commit()
 
