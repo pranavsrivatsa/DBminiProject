@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from faker import Faker
 import models
 import random
-import datetime
+from datetime import datetime, timedelta
 import time
 from datetime import datetime, timedelta
 app = Flask(__name__)
@@ -19,7 +19,10 @@ def change():
 fake = Faker()
 
 def populateCustomerRides():
+<<<<<<< HEAD
     global a
+=======
+>>>>>>> 72fce7042c70fcbe880394bbbaf7d135f3e35885
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
     tim = datetime(2018,12,27,10,0)
@@ -28,7 +31,11 @@ def populateCustomerRides():
             break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
+<<<<<<< HEAD
         newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
+=======
+        newTime = tim + timedelta(0,300) # days, seconds, then other fields.
+>>>>>>> 72fce7042c70fcbe880394bbbaf7d135f3e35885
         if newTime.hour == 18:
             tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
             if newTime.day == 28:
