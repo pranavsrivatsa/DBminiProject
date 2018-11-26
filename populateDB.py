@@ -6,6 +6,7 @@ import random
 from datetime import datetime, timedelta
 import time
 from datetime import datetime, timedelta
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -19,10 +20,8 @@ def change():
 fake = Faker()
 
 def populateCustomerRides():
-<<<<<<< HEAD
     global a
-=======
->>>>>>> 72fce7042c70fcbe880394bbbaf7d135f3e35885
+    a = 1
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
     tim = datetime(2018,12,27,10,0)
@@ -31,16 +30,12 @@ def populateCustomerRides():
             break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
-<<<<<<< HEAD
         newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
-=======
-        newTime = tim + timedelta(0,300) # days, seconds, then other fields.
->>>>>>> 72fce7042c70fcbe880394bbbaf7d135f3e35885
         if newTime.hour == 18:
             tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
             if newTime.day == 28:
                 if newTime.month < 12:
-                    tim = datetime(newTime.year,newTime.month+1,newTime.day,10,00)
+                    tim = datetime(newTime.year,newTime.month+1,1,10,00)
                 if newTime.month == 12:
                     tim = datetime(newTime.year+1,1,1,10,00)
         else:
@@ -48,7 +43,7 @@ def populateCustomerRides():
         customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=newTime)
         db.session.add(customerride)
         db.session.commit()
-        time.sleep(3)
+        time.sleep(5)
 
 def populateRide():
     ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
@@ -61,7 +56,6 @@ def populateRide():
         db.session.commit()
 
 def populateCustomer():
-    populateRide()
     count = 100
     type_list = ['normal','student']
     age10 = list(range(5,10))

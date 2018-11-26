@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION dayfill () 
+CREATE OR REPLACE FUNCTION dayrevfill () 
 RETURNS TRIGGER AS $$ 
 DECLARE   
     Carouselprice INTEGER := 0 ;
@@ -63,13 +63,14 @@ BEGIN
     Gravitronprice := Gravitronprice * Gravitronprice1;
     
     insert into dayrev("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time::timestamp::date, Carouselprice, Darkrideprice, Droptowerprice, Ferriswheelprice, Gyrotowerprice, Rollercoasterprice, Waterrideprice, SpiralSlideprice, Circusprice, Gravitronprice);
+    delete from customerrides;
+    alter sequence customerrides_id_seq restart with 1;
     RETURN new;
 END;$$ 
 LANGUAGE plpgsql;
 
 CREATE TRIGGER update_dayrev
-    AFTER INSERT ON customerrides
+    AFTER INSERT ON customerrides 
     FOR EACH ROW
-    --WHEN (new.time::timestamp::date::day = 28)
     WHEN ( extract (hour from new.time ) = 18)
-    EXECUTE PROCEDURE dayfill();
+    EXECUTE PROCEDURE dayrevfill();

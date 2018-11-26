@@ -64,7 +64,7 @@ class day(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     day_rev = db.Column(db.Integer)
-    count_per_ride = db.Column(db.Integer)
+    day_count = db.Column(db.Integer)
 
 class dayrev(db.Model):
     __tablename__ = 'dayrev'
@@ -135,6 +135,10 @@ class monthcount(db.Model):
     SpiralSlide = db.Column(db.Integer)
     Circus = db.Column(db.Integer)
     Gravitron = db.Column(db.Integer)
+
+@manager.command 
+def seed():
+    populateDB.populateRide()
 
 if __name__=='__main__':
     manager.run()
