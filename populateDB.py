@@ -5,7 +5,6 @@ import models
 import random
 from datetime import datetime, timedelta
 import time
-from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
@@ -13,14 +12,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
 
+fake = Faker()
+
 def change():
     global a
     a = 0
 
-fake = Faker()
-
 def populateCustomerRides():
-    global a
     a = 1
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
@@ -30,7 +28,7 @@ def populateCustomerRides():
             break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
-        newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
+        newTime = tim + timedelta(0,300) # days, seconds, then other fields.
         if newTime.hour == 18:
             tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
             if newTime.day == 28:
@@ -43,7 +41,6 @@ def populateCustomerRides():
         customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=newTime)
         db.session.add(customerride)
         db.session.commit()
-        time.sleep(5)
 
 def populateRide():
     ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
@@ -79,5 +76,3 @@ def populateCustomer():
         db.session.add(customer)
         db.session.commit()
         count -= 1
-
-a = 1

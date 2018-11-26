@@ -1,6 +1,6 @@
-CREATE OR REPLACE FUNCTION daydcfill () 
-RETURNS TRIGGER AS $$ 
-DECLARE   
+CREATE OR REPLACE FUNCTION daydcfill ()
+RETURNS TRIGGER AS $$
+DECLARE
     totalcount INTEGER := 0;
     Carouselcount INTEGER := 0 ;
     Darkridecount INTEGER := 0 ;
@@ -12,8 +12,8 @@ DECLARE
     SpiralSlidecount INTEGER := 0 ;
     Circuscount INTEGER := 0 ;
     Gravitroncount INTEGER := 0 ;
-    
-BEGIN 
+
+BEGIN
     Carouselcount := new."Carousel";
     Darkridecount := new."Darkride";
     Droptowercount := new."Droptower";
@@ -25,9 +25,9 @@ BEGIN
     Circuscount := new."Circus";
     Gravitroncount := new."Gravitron";
     totalcount := Carouselcount + Darkridecount + Droptowercount + Ferriswheelcount + Gyrotowercount + Rollercoastercount + Waterridecount + SpiralSlidecount + Circuscount + Gravitroncount;
-    insert into daydetails("time", "day_rev", "day_count") values (new.time::timestamp::date, 0, totalcount);
+    insert into daydetails("time", "day_rev", "day_count") values (new.time, 0, totalcount);
     RETURN new;
-END;$$ 
+END;$$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER update_daycount
@@ -35,9 +35,9 @@ CREATE TRIGGER update_daycount
     FOR EACH ROW
     EXECUTE PROCEDURE daydcfill();
 
-CREATE OR REPLACE FUNCTION daydrfill () 
-RETURNS TRIGGER AS $$ 
-DECLARE   
+CREATE OR REPLACE FUNCTION daydrfill ()
+RETURNS TRIGGER AS $$
+DECLARE
     totalprice INTEGER := 0;
     Carouselprice INTEGER := 0 ;
     Darkrideprice INTEGER := 0 ;
@@ -49,8 +49,8 @@ DECLARE
     SpiralSlideprice INTEGER := 0 ;
     Circusprice INTEGER := 0 ;
     Gravitronprice INTEGER := 0 ;
-    
-BEGIN 
+
+BEGIN
     Carouselprice := new."Carousel";
     Darkrideprice := new."Darkride";
     Droptowerprice := new."Droptower";
@@ -64,7 +64,7 @@ BEGIN
     totalprice := Carouselprice + Darkrideprice + Droptowerprice + Ferriswheelprice + Gyrotowerprice + Rollercoasterprice + Waterrideprice + SpiralSlideprice + Circusprice + Gravitronprice;
     update daydetails set day_rev = totalprice where id = new.id;
     RETURN new;
-END;$$ 
+END;$$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER update_daycount

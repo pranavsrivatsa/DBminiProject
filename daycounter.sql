@@ -1,6 +1,6 @@
-CREATE OR REPLACE FUNCTION daycountfill () 
-RETURNS TRIGGER AS $$ 
-DECLARE   
+CREATE OR REPLACE FUNCTION daycountfill ()
+RETURNS TRIGGER AS $$
+DECLARE
     Carouselcount INTEGER := 0 ;
     Darkridecount INTEGER := 0 ;
     Droptowercount INTEGER := 0 ;
@@ -11,8 +11,8 @@ DECLARE
     SpiralSlidecount INTEGER := 0 ;
     Circuscount INTEGER := 0 ;
     Gravitroncount INTEGER := 0 ;
-    
-BEGIN 
+
+BEGIN
     Carouselcount := count(*) from customerrides where "rideId" = 1;
     Darkridecount := count(*) from customerrides where "rideId" = 2;
     Droptowercount := count(*) from customerrides where "rideId" = 3;
@@ -23,10 +23,10 @@ BEGIN
     SpiralSlidecount := count(*) from customerrides where "rideId" = 8;
     Circuscount := count(*) from customerrides where "rideId" = 9;
     Gravitroncount := count(*) from customerrides where "rideId" = 10;
-    
-    insert into daycount("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time::timestamp::date, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
+
+    insert into daycount("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
     RETURN new;
-END;$$ 
+END;$$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER update_daycount

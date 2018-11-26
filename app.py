@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, g, request, redirect, Markup
+from flask import Flask, url_for, render_template, g, request, redirect, Markup, json
 import os
 from flask_sqlalchemy import SQLAlchemy
 from models import *
@@ -39,7 +39,9 @@ def register():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def index():
-	customerList = Customer.query.all()
+	daystats = day.query.all()
+	dayRideRev = dayrev.query.all()
+	dayRideCnt = daycount.query.all()
 	customerrides = CustomerRidesLink.query.all()
 	if request.method == "POST":
 	    if request.form['pop'] == 'popcust':
@@ -48,12 +50,13 @@ def index():
 	        populateDB.populateCustomerRides()
 	    if request.form['pop'] == 'stoppark':
 		    populateDB.change()
-	return render_template("dashboard.html",customers=customerList,customerRides=customerrides)
+	return render_template("dashboard.html",dayStats=daystats,dayriderev=dayRideRev,dayridecnt=dayRideCnt,customerRides=customerrides)
 
 @app.route("/graphs",methods=['GET'])
 def getGraph():
 	ageList = graph.getAgeRanges()
-	return render_template("graphs.html",ageRanges=ageList)
+	datems,dayrevenue,daycount = graph.getDayStats()
+	return render_template("graphs.html",ageRanges=ageList,dates=datems,dayRevenue=dayrevenue,dayCount=daycount)
 
 
 if __name__ == '__main__':

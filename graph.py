@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from models import *
-from collections import Counter
+from datetime import datetime
+import time
+import json
 
 def getAgeRanges():
     customers = Customer.query.all()
@@ -20,3 +22,18 @@ def getAgeRanges():
         else:
             ageRange[5] += 1
     return ageRange
+
+def date_to_millis(d):
+    """Converts a datetime object to the number of milliseconds since the unix epoch."""
+    return int(time.mktime(d.timetuple())) * 1000
+
+def getDayStats():
+    daystats = day.query.all()
+    dates = []
+    revenue = []
+    count = []
+    for d in daystats:
+        dates.append(date_to_millis(d.time))
+        revenue.append(d.day_rev)
+        count.append(d.day_count)
+    return dates,revenue,count
