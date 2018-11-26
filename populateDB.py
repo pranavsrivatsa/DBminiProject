@@ -19,6 +19,7 @@ def change():
     a = 0
 
 def populateCustomerRides():
+    global a
     a = 1
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
@@ -28,7 +29,7 @@ def populateCustomerRides():
             break
         customer = random.choice(customerList)
         ride = random.choice(rideList)
-        newTime = tim + timedelta(0,300) # days, seconds, then other fields.
+        newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
         if newTime.hour == 18:
             tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
             if newTime.day == 28:
@@ -41,6 +42,7 @@ def populateCustomerRides():
         customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=newTime)
         db.session.add(customerride)
         db.session.commit()
+        time.sleep(3)
 
 def populateRide():
     ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
@@ -76,3 +78,5 @@ def populateCustomer():
         db.session.add(customer)
         db.session.commit()
         count -= 1
+
+a = 1
