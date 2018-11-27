@@ -6,16 +6,12 @@ import populateDB
 import graph
 import pusher
 
-# To run
-# > source env/bin/activate
-# > flask run
-
 app = Flask(__name__)
 pusher_client = pusher.Pusher(
-        app_id=os.getenv('PUSHER_APP_ID'),
-        key=os.getenv('PUSHER_KEY'),
-        secret=os.getenv('PUSHER_SECRET'),
-        cluster=os.getenv('PUSHER_CLUSTER'),
+        app_id='643906',
+        key='1a2e5fd5d91f28433d49',
+        secret='f20f9cbc8cd1cb953e67',
+        cluster='ap2',
         ssl=True)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://dbbkiputbafcju:3477b7be42046136fa9d2dec76b7b397933f1314dcbf136a64e1d1288185663a@ec2-54-83-29-34.compute-1.amazonaws.com:5432/d78tp1vprns7ma?sslmode=require'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'

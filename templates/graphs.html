@@ -5,6 +5,33 @@
 {% endblock %}
 {% block content %}
 <div class="page-container">
+  <!-- sidebar menu area start -->
+  <div class="sidebar-menu">
+      <div class="sidebar-header">
+        <h2 style="font-family:georgia,garamond,serif; color:white; fontsize:20px;">APMS</h2>
+      </div>
+      <div class="main-menu">
+        <ul class="metismenu" id="menu">
+            <li><a href="{{url_for('getGraph')}}"><i class="ti-map-alt"></i> <span>Graphs</span></a></li>
+            <li><a href="{{url_for('index')}}"><i class="ti-receipt"></i> <span>Dashboard</span></a></li>
+        </ul>
+      </div>
+  </div>
+  <!-- sidebar menu area end -->
+  <div class="header-area">
+      <div class="row align-items-center">
+          <!-- nav and search button -->
+          <div class="col-md-6 col-sm-8 clearfix">
+              <div class="nav-btn pull-left">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+              </div>
+          </div>
+          <h2 style="color:#333744;">AMUSEMENT PARK MANAGEMENT SYSTEM</h2>
+    </div>
+  </div>
+  <!-- nav area end -->
   <form action="dashboard" method="post">
     <!-- main content area start -->
     <div class="main-content">
