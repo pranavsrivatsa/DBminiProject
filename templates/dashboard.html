@@ -37,8 +37,8 @@
               <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">Per Day Statistics</h4>
-                    <div id="data-tables" class="data-tables datatable-primary">
-                        <table id="dataTable" class="datatable text-center">
+                    <div id="" class="data-tables datatable-primary">
+                        <table id="" class="datatable text-center">
                               <thead class="text-capitalize">
                                 <tr>
                                     <td>Date</td>
@@ -65,8 +65,9 @@
               <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">Customer Rides</h4>
+                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#add-modal">Add New</button>
                     <div id="data-tables" class="data-tables datatable-primary">
-                      <table id="dataTable" class="datatable text-center">
+                      <table id="" class="datatable text-center">
                         <thead class="text-capitalize">
                           <tr>
                             <td>Customer</td>
@@ -80,6 +81,8 @@
                                 <td>{{ customer.customer.name }}</td>
                                 <td>{{ customer.ride.name }}</td>
                                 <td>{{ customer.time.strftime("%H:%M:%S, %d %b %Y") }}
+                                  &emsp;<a href="/edit/{{ customer.id }}" role="button">Edit</a>
+                                  &emsp;<a href="/delete/{{ customer.id }}" role="button">Delete</a>
                                 </td>
                               </tr>
                           {% endfor %}
@@ -96,7 +99,7 @@
                 <div class="card-body">
                     <h4 class="header-title">Per Day Ride Count Statistics</h4>
                     <div id="data-tables" class="data-tables datatable-primary">
-                        <table id="dataTable" class="datatable text-center">
+                        <table id="" class="datatable text-center">
                               <thead class="text-capitalize">
                                 <tr>
                                     <td>Date</td>
@@ -141,7 +144,7 @@
                 <div class="card-body">
                     <h4 class="header-title">Per Day Ride Revenue Statistics</h4>
                     <div id="data-tables" class="data-tables datatable-primary">
-                        <table id="dataTable" class="datatable text-center">
+                        <table id="" class="datatable text-center">
                               <thead class="text-capitalize">
                                 <tr>
                                     <td>Date</td>
@@ -192,4 +195,37 @@
 <!-- page container area end -->
   </form>
 </div>
+
+<div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="div-forms">
+        <form id="edit-form" action="backend" method="post">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-5 mt-5">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="customer" placeholder="Customer">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="ride" placeholder="Ride">
+                </div>
+                <div class="form-group">
+                    <input
+                       type="text"
+                       class="form-control datetime"
+                       name="time_in"
+                       placeholder="Time in"
+                    >
+                </div>
+                <button type="submit" class="btn btn-block btn-primary">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
