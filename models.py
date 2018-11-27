@@ -99,8 +99,8 @@ class month(db.Model):
     __tablename__ = 'monthdetails'
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    day_rev = db.Column(db.Integer)
-    count_per_ride = db.Column(db.Integer)
+    month_rev = db.Column(db.Integer)
+    month_count = db.Column(db.Integer)
 
 class monthrev(db.Model):
     __tablename__ = 'monthrev'
