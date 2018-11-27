@@ -84,7 +84,9 @@
     <script src="{{url_for('static', filename='assets/js/scripts.js')}}"></script>
     <script>
       renderGraph({{ageRanges|safe}});
-      //renderLineGraph({{dates|safe}},{{dayRevenue|safe}},{{dayCount|safe}});
+      renderDayGraph({{dates|safe}},{{dayRevenue|safe}},{{dayCount|safe}},{{Days}});
+      renderRideDayRevenueGraph({{rideDates|safe}},{{CR|safe}},{{DRR|safe}},{{DTR|safe}},{{FWR|safe}},{{GTR|safe}},{{RCR|safe}},{{WRR|safe}},{{SSR|safe}},{{CIR|safe}},{{GR|safe}},{{Hours}});
+      renderRideDayCountGraph({{rideDates|safe}},{{CC|safe}},{{DRC|safe}},{{DTC|safe}},{{FWC|safe}},{{GTC|safe}},{{RCC|safe}},{{WRC|safe}},{{SSC|safe}},{{CIC|safe}},{{GC|safe}},{{Hours}});
       $(document).ready(function() { $('.datatable').dataTable(); });
     </script>
 </body>

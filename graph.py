@@ -37,3 +37,55 @@ def getDayStats():
         revenue.append(d.day_rev)
         count.append(d.day_count)
     return dates,revenue,count
+
+def getDayRideRevenue():
+    dayRideRevenue = dayrev.query.all()
+    dates = []
+    Carousel = []
+    Darkride = []
+    Droptower = []
+    Ferriswheel = []
+    Gyrotower = []
+    Rollercoaster = []
+    Waterride = []
+    SpiralSlide = []
+    Circus = []
+    Gravitron = []
+    for d in dayRideRevenue:
+        dates.append(date_to_millis(d.time))
+        Carousel.append(d.Carousel)
+        Darkride.append(d.Darkride)
+        Droptower.append(d.Droptower)
+        Ferriswheel.append(d.Ferriswheel)
+        Gyrotower.append(d.Gyrotower)
+        Rollercoaster.append(d.Rollercoaster)
+        Waterride.append(d.Waterride)
+        SpiralSlide.append(d.SpiralSlide)
+        Circus.append(d.Circus)
+        Gravitron.append(d.Gravitron)
+    return dates,Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+
+def getDayRideCount():
+    dayRideRevenue = daycount.query.all()
+    Carousel = []
+    Darkride = []
+    Droptower = []
+    Ferriswheel = []
+    Gyrotower = []
+    Rollercoaster = []
+    Waterride = []
+    SpiralSlide = []
+    Circus = []
+    Gravitron = []
+    for d in dayRideRevenue:
+        Carousel.append(d.Carousel)
+        Darkride.append(d.Darkride)
+        Droptower.append(d.Droptower)
+        Ferriswheel.append(d.Ferriswheel)
+        Gyrotower.append(d.Gyrotower)
+        Rollercoaster.append(d.Rollercoaster)
+        Waterride.append(d.Waterride)
+        SpiralSlide.append(d.SpiralSlide)
+        Circus.append(d.Circus)
+        Gravitron.append(d.Gravitron)
+    return Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron

@@ -56,7 +56,11 @@ def index():
 def getGraph():
 	ageList = graph.getAgeRanges()
 	datems,dayrevenue,daycount = graph.getDayStats()
-	return render_template("graphs.html",ageRanges=ageList,dates=datems,dayRevenue=dayrevenue,dayCount=daycount)
+	days = len(datems)
+	ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+	hours = len(ridedates)
+	cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
+	return render_template("graphs.html",ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycount,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 
 if __name__ == '__main__':
