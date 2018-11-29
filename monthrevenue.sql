@@ -25,6 +25,12 @@ BEGIN
     Gravitroncount := sum(Gravitron) from dayrev;
 
     insert into monthrev("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
+    delete from dayrev;
+    delete from daydetials;
+    delete from daycount;
+    alter sequence dayrev_id_seq restart with 1;
+    alter sequence daydetails_id_seq restart with 1;
+    alter sequence daycount_id_seq restart with 1;
     RETURN new;
 END;$$
 LANGUAGE plpgsql;
