@@ -46,9 +46,12 @@ def populateCustomerRides():
 
 def populateRide():
     ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
+    price_list = [200, 300, 200, 250, 200, 350, 300, 150, 200, 250]
+    x = 0
     for ride in ride_list:
         name = ride
-        price = (random.randint(20,30)) * 10
+        price = price_list[x]
+        x += 1
         maintenance_cost = (random.randint(20,30)) * 100
         rideDetails = models.Ride(name=name,price=price,maintenance_cost=maintenance_cost)
         db.session.add(rideDetails)
