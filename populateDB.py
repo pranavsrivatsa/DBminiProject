@@ -20,11 +20,12 @@ def change():
 
 def populateCustomerRides():
     global a
+    global tim
     a = 1
     customerList = models.Customer.query.all()
     rideList = models.Ride.query.all()
-    tim = datetime(2018,12,27,10,0)
-    while True:
+    
+    while True:        
         if a is 0:
             break
         customer = random.choice(customerList)
@@ -32,7 +33,9 @@ def populateCustomerRides():
         newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
         if newTime.hour == 18:
             tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
+            time.sleep(5)
             if newTime.day == 28:
+                time.sleep(3)
                 if newTime.month < 12:
                     tim = datetime(newTime.year,newTime.month+1,1,10,00)
                 if newTime.month == 12:
@@ -83,3 +86,4 @@ def populateCustomer():
         count -= 1
 
 a = 1
+tim = datetime(2018,12,26,10,0)

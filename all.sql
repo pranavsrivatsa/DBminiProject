@@ -238,20 +238,20 @@ DECLARE
     Gravitroncount INTEGER := 0 ;
 
 BEGIN
-    Carouselcount := sum("Carousel") from daycount;
-    Darkridecount := sum("Darkride") from daycount;
-    Droptowercount := sum("Droptower") from daycount;
-    Ferriswheelcount := sum("Ferriswheel") from daycount;
-    Gyrotowercount := sum("Gyrotower") from daycount;
-    Rollercoastercount := sum("Rollercoaster") from daycount;
-    Waterridecount := sum("Waterride") from daycount;
-    SpiralSlidecount := sum("SpiralSlide") from daycount;
-    Circuscount := sum("Circus") from daycount;
-    Gravitroncount := sum("Gravitron") from daycount;
+    Carouselcount := sum("Carousel") from dayrev;
+    Darkridecount := sum("Darkride") from dayrev;
+    Droptowercount := sum("Droptower") from dayrev;
+    Ferriswheelcount := sum("Ferriswheel") from dayrev;
+    Gyrotowercount := sum("Gyrotower") from dayrev;
+    Rollercoastercount := sum("Rollercoaster") from dayrev;
+    Waterridecount := sum("Waterride") from dayrev;
+    SpiralSlidecount := sum("SpiralSlide") from dayrev;
+    Circuscount := sum("Circus") from dayrev;
+    Gravitroncount := sum("Gravitron") from dayrev;
 
     insert into monthrev("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
     delete from dayrev;
-    delete from daydetials;
+    delete from daydetails;
     delete from daycount;
     alter sequence dayrev_id_seq restart with 1;
     alter sequence daydetails_id_seq restart with 1;
