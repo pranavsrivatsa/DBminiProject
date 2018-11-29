@@ -1,0 +1,718 @@
+\chapter{Implementation}
+
+\section{Code For Major Functionalities}
+\subsection{Main Application}
+\thispagestyle{fancy}
+\begin{lstlisting}[language=Python]
+from flask import Flask, url_for, render_template, g, request, redirect, Markup, json
+import os
+from flask_sqlalchemy import SQLAlchemy
+from models import *
+import populateDB
+import graph
+import pusher
+
+app = Flask(__name__)
+pusher_client = pusher.Pusher(
+        app_id='643906',
+        key='1a2e5fd5d91f28433d49',
+        secret='f20f9cbc8cd1cb953e67',
+        cluster='ap2',
+        ssl=True)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://dbbkiputbafcju:3477b7be42046136fa9d2dec76b7b397933f1314dcbf136a64e1d1288185663a@ec2-54-83-29-34.compute-1.amazonaws.com:5432/d78tp1vprns7ma?sslmode=require'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+db.init_app(app)
+
+@app.route("/", methods=['GET', 'POST'])
+def login():
+  error = None
+  if request.method == 'POST':
+    inputEmail = request.form["InputEmail"]
+    actualPassword = Account.query.filter_by(email=inputEmail).first()
+    if request.form['InputPassword'] != str(actualPassword):
+      error = "Invalid Credentials."
+      return render_template('auth/login.html', error=error)
+    else:
+      return redirect('/dashboard')
+  else:
+    return render_template("auth/login.html")
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+  if request.method == "POST":
+    inputCredentials = request.form.to_dict()
+    user = Account(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
+    db.session.add(user)
+    db.session.commit()
+    return redirect(url_for("index"))
+  else:
+    return render_template("auth/register.html")
+
+@app.route("/dashboard", methods=['GET', 'POST'])
+def index():
+  daystats = day.query.all()
+  dayRideRev = dayrev.query.all()
+  dayRideCnt = daycount.query.all()
+  customerrides = CustomerRidesLink.query.all()
+  if request.method == "POST":
+      if request.form['pop'] == 'popcust':
+          populateDB.populateCustomer()
+      if request.form['pop'] == 'startpark':
+          populateDB.populateCustomerRides()
+      if request.form['pop'] == 'stoppark':
+        populateDB.change()
+  return render_template("dashboard.html",dayStats=daystats,dayriderev=dayRideRev,dayridecnt=dayRideCnt,customerRides=customerrides,ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
+
+@app.route("/graphs",methods=['GET'])
+def getGraph():
+  return render_template("graphs.html",ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
+
+@app.route("/backend", methods=['POST', 'GET'])
+def backend():
+  if request.method == "POST":
+    customer = request.form["customer"]
+    ride = request.form["ride"]
+    time_in = datetime.strptime(request.form['time_in'], '%d-%m-%Y %H:%M')
+    new_customerride = CustomerRidesLink(customerId=customer,rideId=ride,time=time_in)
+    db.session.add(new_customerride)
+    db.session.commit()
+    data = {
+            "id": new_customerride.id,
+            "customer": customer,
+            "ride": ride,
+            "time_in": request.form['time_in']}
+
+    pusher_client.trigger('table', 'new-record', {'data': data })
+    return redirect("/dashboard", code=302)
+  else:
+    crs = db.session.query(CustomerRidesLink,Customer,Ride).filter_by(customerId=Customer.id,rideId=Ride.id).all()
+    return render_template('dashboard.html', customers=crs)
+
+@app.route("/edit/<int:id>", methods=['POST', 'GET'])
+def update_record(id):
+  if request.method == "POST":
+    customer = request.form["customer"]
+    ride = request.form["ride"]
+    time_in = datetime.strptime(request.form['time_in'], '%d-%m-%Y %H:%M')
+    update_customer = db.session.query(CustomerRidesLink,Customer,Ride).filter_by(id=id,customerId=Customer.id,rideId=Ride.id).first()
+    update_customer.CustomerRidesLink.customerId = customer
+    update_customer.CustomerRidesLink.rideId = ride
+    update_customer.CustomerRidesLink.time = time_in
+    db.session.commit()
+    data = {
+            "customer": customer,
+            "ride": ride,
+            "time_in": request.form['time_in']}
+
+    pusher_client.trigger('table', 'update-record', {'data': data })
+    return redirect("/dashboard", code=302)
+  else:
+    new_customer = db.session.query(CustomerRidesLink,Customer,Ride).filter_by(id=id,customerId=Customer.id,rideId=Ride.id).first()
+    print(new_customer)
+    new_customer.CustomerRidesLink.time = new_customer.CustomerRidesLink.time.strftime("%d-%m-%Y %H:%M")
+    return render_template('update.html', data=new_customer)
+
+@app.route("/delete/<int:id>", methods=['POST','GET'])
+def delete_record(id):
+    customer = db.session.query(CustomerRidesLink).filter_by(id=id).first()
+    db.session.delete(customer)
+    db.session.commit()
+    return redirect("/dashboard")
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+
+ageList = graph.getAgeRanges()
+datems,dayrevenue,daycunt = graph.getDayStats()
+days = len(datems)
+ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+hours = len(ridedates)
+cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
+
+if __name__ == '__main__':
+  app.run(host="localhost",port=5010, debug=True)
+\end{lstlisting}
+
+\subsection{Model}
+\thispagestyle{fancy}
+\begin{lstlisting}
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+from datetime import datetime
+from alembic import op
+import populateDB
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+db.init_app(app)
+migrate = Migrate(app, db)
+
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
+class Account(db.Model):
+    __tablename__ = 'account'
+    id = db.Column(db.Integer, primary_key=True)
+    fullname = db.Column(db.String(128), nullable=False)
+    email = db.Column(db.String(128), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        return self.password
+
+class Customer(db.Model):
+    __tablename__ = 'customer'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.String(128), nullable=False)
+    rides = db.relationship('CustomerRidesLink')
+
+class Ride(db.Model):
+    __tablename__ = 'ride'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), unique=True, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    maintenance_cost = db.Column(db.Integer, nullable=False)
+
+class CustomerRidesLink(db.Model):
+    __tablename__ = 'customerrides'
+    id = db.Column(db.Integer, primary_key=True)
+    customerId = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    rideId = db.Column(db.Integer, db.ForeignKey('ride.id'))
+    customer = db.relationship('Customer')
+    ride = db.relationship('Ride')
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+class day(db.Model):
+    __tablename__ = 'daydetails'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    day_rev = db.Column(db.Integer)
+    day_count = db.Column(db.Integer)
+
+class dayrev(db.Model):
+    __tablename__ = 'dayrev'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Darkride = db.Column(db.Integer)
+    Droptower = db.Column(db.Integer)
+    Ferriswheel = db.Column(db.Integer)
+    Gyrotower = db.Column(db.Integer)
+    Rollercoaster = db.Column(db.Integer)
+    Waterride = db.Column(db.Integer)
+    SpiralSlide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+class daycount(db.Model):
+    __tablename__ = 'daycount'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Darkride = db.Column(db.Integer)
+    Droptower = db.Column(db.Integer)
+    Ferriswheel = db.Column(db.Integer)
+    Gyrotower = db.Column(db.Integer)
+    Rollercoaster = db.Column(db.Integer)
+    Waterride = db.Column(db.Integer)
+    SpiralSlide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+class month(db.Model):
+    __tablename__ = 'monthdetails'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    month_rev = db.Column(db.Integer)
+    month_count = db.Column(db.Integer)
+
+class monthrev(db.Model):
+    __tablename__ = 'monthrev'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Darkride = db.Column(db.Integer)
+    Droptower = db.Column(db.Integer)
+    Ferriswheel = db.Column(db.Integer)
+    Gyrotower = db.Column(db.Integer)
+    Rollercoaster = db.Column(db.Integer)
+    Waterride = db.Column(db.Integer)
+    SpiralSlide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+class monthcount(db.Model):
+    __tablename__ = 'monthcount'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    Carousel = db.Column(db.Integer)
+    Darkride = db.Column(db.Integer)
+    Droptower = db.Column(db.Integer)
+    Ferriswheel = db.Column(db.Integer)
+    Gyrotower = db.Column(db.Integer)
+    Rollercoaster = db.Column(db.Integer)
+    Waterride = db.Column(db.Integer)
+    SpiralSlide = db.Column(db.Integer)
+    Circus = db.Column(db.Integer)
+    Gravitron = db.Column(db.Integer)
+
+@manager.command
+def seed():
+    populateDB.populateRide()
+
+if __name__=='__main__':
+    manager.run()
+\end{lstlisting}
+
+\subsection{Populate Database}
+\thispagestyle{fancy}
+\begin{lstlisting}
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from faker import Faker
+import models
+import random
+from datetime import datetime, timedelta
+import time
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+db.init_app(app)
+
+fake = Faker()
+
+def change():
+    global a
+    a = 0
+
+def populateCustomerRides():
+    global a
+    global tim
+    a = 1
+    customerList = models.Customer.query.all()
+    rideList = models.Ride.query.all()
+
+    while True:
+        if a is 0:
+            break
+        customer = random.choice(customerList)
+        ride = random.choice(rideList)
+        newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
+        if newTime.hour == 18:
+            tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
+            time.sleep(5)
+            if newTime.day == 28:
+                time.sleep(3)
+                if newTime.month < 12:
+                    tim = datetime(newTime.year,newTime.month+1,1,10,00)
+                if newTime.month == 12:
+                    tim = datetime(newTime.year+1,1,1,10,00)
+        else:
+            tim = newTime
+        customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=newTime)
+        db.session.add(customerride)
+        db.session.commit()
+        time.sleep(3)
+
+def populateRide():
+    ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
+    price_list = [200, 300, 200, 250, 200, 350, 300, 150, 200, 250]
+    x = 0
+    for ride in ride_list:
+        name = ride
+        price = price_list[x]
+        x += 1
+        maintenance_cost = (random.randint(20,30)) * 100
+        rideDetails = models.Ride(name=name,price=price,maintenance_cost=maintenance_cost)
+        db.session.add(rideDetails)
+        db.session.commit()
+
+def populateCustomer():
+    count = 100
+    type_list = ['normal','student']
+    age10 = list(range(5,10))
+    age20 = list(range(11,19))
+    age30 = list(range(20,30))
+    age50 = list(range(31,50))
+    age70 = list(range(51,70))
+    age100 = list(range(71,100))
+    wr = age10*70+age20*20+age30*5+age50*3+age70*1+age100*1
+    while count > 0:
+        name = fake.name()
+        age = random.choice(wr)
+        type = 'normal'
+        if age <= 10:
+            type = 'child'
+        elif age >= 60:
+            type = 'senior'
+        else:
+            type = random.choice(type_list)
+        customer = models.Customer(name=name,age=age,type=type)
+        db.session.add(customer)
+        db.session.commit()
+        count -= 1
+
+a = 1
+tim = datetime(2018,12,26,10,0)
+\end{lstlisting}
+
+\section{Procedures}
+\subsection{Consolidate day statistics}
+\begin{lstlisting}
+CREATE OR REPLACE FUNCTION daydcfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    totalcount INTEGER := 0;
+    Carouselcount INTEGER := 0 ;
+    Darkridecount INTEGER := 0 ;
+    Droptowercount INTEGER := 0 ;
+    Ferriswheelcount INTEGER := 0 ;
+    Gyrotowercount INTEGER := 0 ;
+    Rollercoastercount INTEGER := 0 ;
+    Waterridecount INTEGER := 0 ;
+    SpiralSlidecount INTEGER := 0 ;
+    Circuscount INTEGER := 0 ;
+    Gravitroncount INTEGER := 0 ;
+
+BEGIN
+    Carouselcount := new."Carousel";
+    Darkridecount := new."Darkride";
+    Droptowercount := new."Droptower";
+    Ferriswheelcount := new."Ferriswheel";
+    Gyrotowercount := new."Gyrotower";
+    Rollercoastercount := new."Rollercoaster";
+    Waterridecount := new."Waterride";
+    SpiralSlidecount := new."SpiralSlide";
+    Circuscount := new."Circus";
+    Gravitroncount := new."Gravitron";
+    totalcount := Carouselcount + Darkridecount + Droptowercount + Ferriswheelcount + Gyrotowercount + Rollercoastercount + Waterridecount + SpiralSlidecount + Circuscount + Gravitroncount;
+    insert into daydetails("time", "day_rev", "day_count") values (new.time, 0, totalcount);
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_daydccount
+    AFTER INSERT ON daycount
+    FOR EACH ROW
+    EXECUTE PROCEDURE daydcfill();
+
+CREATE OR REPLACE FUNCTION daydrfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    totalprice INTEGER := 0;
+    Carouselprice INTEGER := 0 ;
+    Darkrideprice INTEGER := 0 ;
+    Droptowerprice INTEGER := 0 ;
+    Ferriswheelprice INTEGER := 0 ;
+    Gyrotowerprice INTEGER := 0 ;
+    Rollercoasterprice INTEGER := 0 ;
+    Waterrideprice INTEGER := 0 ;
+    SpiralSlideprice INTEGER := 0 ;
+    Circusprice INTEGER := 0 ;
+    Gravitronprice INTEGER := 0 ;
+
+BEGIN
+    Carouselprice := new."Carousel";
+    Darkrideprice := new."Darkride";
+    Droptowerprice := new."Droptower";
+    Ferriswheelprice := new."Ferriswheel";
+    Gyrotowerprice := new."Gyrotower";
+    Rollercoasterprice := new."Rollercoaster";
+    Waterrideprice:= new."Waterride";
+    SpiralSlideprice := new."SpiralSlide";
+    Circusprice := new."Circus";
+    Gravitronprice := new."Gravitron";
+    totalprice := Carouselprice + Darkrideprice + Droptowerprice + Ferriswheelprice + Gyrotowerprice + Rollercoasterprice + Waterrideprice + SpiralSlideprice + Circusprice + Gravitronprice;
+    update daydetails set day_rev = totalprice where id = new.id;
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_daydrcount
+    AFTER INSERT ON dayrev
+    FOR EACH ROW
+    EXECUTE PROCEDURE daydrfill();
+
+CREATE OR REPLACE FUNCTION dayrevfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    Carouselprice INTEGER := 0 ;
+    Darkrideprice INTEGER := 0 ;
+    Droptowerprice INTEGER := 0 ;
+    Ferriswheelprice INTEGER := 0 ;
+    Gyrotowerprice INTEGER := 0 ;
+    Rollercoasterprice INTEGER := 0 ;
+    Waterrideprice INTEGER := 0 ;
+    SpiralSlideprice INTEGER := 0 ;
+    Circusprice INTEGER := 0 ;
+    Gravitronprice INTEGER := 0 ;
+    Carouselprice1 INTEGER := 0 ;
+    Darkrideprice1 INTEGER := 0 ;
+    Droptowerprice1 INTEGER := 0 ;
+    Ferriswheelprice1 INTEGER := 0 ;
+    Gyrotowerprice1 INTEGER := 0 ;
+    Rollercoasterprice1 INTEGER := 0 ;
+    Waterrideprice1 INTEGER := 0 ;
+    SpiralSlideprice1 INTEGER := 0 ;
+    Circusprice1 INTEGER := 0 ;
+    Gravitronprice1 INTEGER := 0 ;
+BEGIN
+    Carouselprice := count(*) from customerrides where "rideId" = 1;
+    Carouselprice1 := r.price from ride r where id = 1;
+    Carouselprice := Carouselprice * Carouselprice1;
+
+    Darkrideprice := count(*) from customerrides where "rideId" = 2;
+    Darkrideprice1 := r.price from ride r where id = 2;
+    Darkrideprice := Darkrideprice * Darkrideprice1;
+
+    Droptowerprice := count(*) from customerrides where "rideId" = 3;
+    Droptowerprice1 := r.price from ride r where id = 3;
+    Droptowerprice := Droptowerprice * Droptowerprice1;
+
+    Ferriswheelprice := count(*) from customerrides where "rideId" = 4;
+    Ferriswheelprice1 := r.price from ride r where id = 4;
+    Ferriswheelprice := Ferriswheelprice * Ferriswheelprice1;
+
+    Gyrotowerprice := count(*) from customerrides where "rideId" = 5;
+    Gyrotowerprice1 := r.price from ride r where id = 5;
+    Gyrotowerprice := Gyrotowerprice * Gyrotowerprice1;
+
+    Rollercoasterprice := count(*) from customerrides where "rideId" = 6;
+    Rollercoasterprice1 := r.price from ride r where id = 6;
+    Rollercoasterprice := Rollercoasterprice * Rollercoasterprice1;
+
+    Waterrideprice := count(*) from customerrides where "rideId" = 7;
+    Waterrideprice1 := r.price from ride r where id = 7;
+    Waterrideprice := Waterrideprice * Waterrideprice1;
+
+    SpiralSlideprice := count(*) from customerrides where "rideId" = 8;
+    SpiralSlideprice1 := r.price from ride r where id = 8;
+    SpiralSlideprice := SpiralSlideprice * SpiralSlideprice1;
+
+    Circusprice := count(*) from customerrides where "rideId" = 9;
+    Circusprice1 := r.price from ride r where id = 9;
+    Circusprice := Circusprice * Circusprice1;
+
+    Gravitronprice := count(*) from customerrides where "rideId" = 10;
+    Gravitronprice1 := r.price from ride r where id = 10;
+    Gravitronprice := Gravitronprice * Gravitronprice1;
+
+    insert into dayrev("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselprice, Darkrideprice, Droptowerprice, Ferriswheelprice, Gyrotowerprice, Rollercoasterprice, Waterrideprice, SpiralSlideprice, Circusprice, Gravitronprice);
+    delete from customerrides;
+    alter sequence customerrides_id_seq restart with 1;
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_dayrev
+    AFTER INSERT ON customerrides
+    FOR EACH ROW
+    WHEN ( extract (hour from new.time ) = 18)
+    EXECUTE PROCEDURE dayrevfill();
+
+    CREATE OR REPLACE FUNCTION daycountfill ()
+    RETURNS TRIGGER AS $$
+    DECLARE
+        Carouselcount INTEGER := 0 ;
+        Darkridecount INTEGER := 0 ;
+        Droptowercount INTEGER := 0 ;
+        Ferriswheelcount INTEGER := 0 ;
+        Gyrotowercount INTEGER := 0 ;
+        Rollercoastercount INTEGER := 0 ;
+        Waterridecount INTEGER := 0 ;
+        SpiralSlidecount INTEGER := 0 ;
+        Circuscount INTEGER := 0 ;
+        Gravitroncount INTEGER := 0 ;
+
+    BEGIN
+        Carouselcount := count(*) from customerrides where "rideId" = 1;
+        Darkridecount := count(*) from customerrides where "rideId" = 2;
+        Droptowercount := count(*) from customerrides where "rideId" = 3;
+        Ferriswheelcount := count(*) from customerrides where "rideId" = 4;
+        Gyrotowercount := count(*) from customerrides where "rideId" = 5;
+        Rollercoastercount := count(*) from customerrides where "rideId" = 6;
+        Waterridecount := count(*) from customerrides where "rideId" = 7;
+        SpiralSlidecount := count(*) from customerrides where "rideId" = 8;
+        Circuscount := count(*) from customerrides where "rideId" = 9;
+        Gravitroncount := count(*) from customerrides where "rideId" = 10;
+
+        insert into daycount("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
+        RETURN new;
+    END;$$
+    LANGUAGE plpgsql;
+
+    CREATE TRIGGER update_daycount
+        AFTER INSERT ON customerrides
+        FOR EACH ROW
+        WHEN ( extract (hour from new.time ) = 18)
+        EXECUTE PROCEDURE daycountfill();
+\end{lstlisting}
+
+\subsection{Consolidate month statistics}
+\begin{lstlisting}
+CREATE OR REPLACE FUNCTION monthcountfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    Carouselcount INTEGER := 0 ;
+    Darkridecount INTEGER := 0 ;
+    Droptowercount INTEGER := 0 ;
+    Ferriswheelcount INTEGER := 0 ;
+    Gyrotowercount INTEGER := 0 ;
+    Rollercoastercount INTEGER := 0 ;
+    Waterridecount INTEGER := 0 ;
+    SpiralSlidecount INTEGER := 0 ;
+    Circuscount INTEGER := 0 ;
+    Gravitroncount INTEGER := 0 ;
+
+BEGIN
+    Carouselcount := sum("Carousel") from daycount;
+    Darkridecount := sum("Darkride") from daycount;
+    Droptowercount := sum("Droptower") from daycount;
+    Ferriswheelcount := sum("Ferriswheel") from daycount;
+    Gyrotowercount := sum("Gyrotower") from daycount;
+    Rollercoastercount := sum("Rollercoaster") from daycount;
+    Waterridecount := sum("Waterride") from daycount;
+    SpiralSlidecount := sum("SpiralSlide") from daycount;
+    Circuscount := sum("Circus") from daycount;
+    Gravitroncount := sum("Gravitron") from daycount;
+
+    insert into monthcount("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_monthcount
+    AFTER INSERT ON daycount
+    FOR EACH ROW
+    WHEN ( extract (day from new.time ) = 28)
+    EXECUTE PROCEDURE monthcountfill();
+
+CREATE OR REPLACE FUNCTION monthrevfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    Carouselcount INTEGER := 0 ;
+    Darkridecount INTEGER := 0 ;
+    Droptowercount INTEGER := 0 ;
+    Ferriswheelcount INTEGER := 0 ;
+    Gyrotowercount INTEGER := 0 ;
+    Rollercoastercount INTEGER := 0 ;
+    Waterridecount INTEGER := 0 ;
+    SpiralSlidecount INTEGER := 0 ;
+    Circuscount INTEGER := 0 ;
+    Gravitroncount INTEGER := 0 ;
+
+BEGIN
+    Carouselcount := sum("Carousel") from dayrev;
+    Darkridecount := sum("Darkride") from dayrev;
+    Droptowercount := sum("Droptower") from dayrev;
+    Ferriswheelcount := sum("Ferriswheel") from dayrev;
+    Gyrotowercount := sum("Gyrotower") from dayrev;
+    Rollercoastercount := sum("Rollercoaster") from dayrev;
+    Waterridecount := sum("Waterride") from dayrev;
+    SpiralSlidecount := sum("SpiralSlide") from dayrev;
+    Circuscount := sum("Circus") from dayrev;
+    Gravitroncount := sum("Gravitron") from dayrev;
+
+    insert into monthrev("time", "Carousel", "Darkride", "Droptower", "Ferriswheel", "Gyrotower", "Rollercoaster", "Waterride", "SpiralSlide", "Circus", "Gravitron") values (new.time, Carouselcount, Darkridecount, Droptowercount, Ferriswheelcount, Gyrotowercount, Rollercoastercount, Waterridecount, SpiralSlidecount, Circuscount, Gravitroncount);
+    delete from dayrev;
+    delete from daydetails;
+    delete from daycount;
+    alter sequence dayrev_id_seq restart with 1;
+    alter sequence daydetails_id_seq restart with 1;
+    alter sequence daycount_id_seq restart with 1;
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_monthrev
+    AFTER INSERT ON dayrev
+    FOR EACH ROW
+    WHEN ( extract (day from new.time ) = 28)
+    EXECUTE PROCEDURE monthrevfill();
+
+CREATE OR REPLACE FUNCTION monthmcfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    totalcount INTEGER := 0;
+    Carouselcount INTEGER := 0 ;
+    Darkridecount INTEGER := 0 ;
+    Droptowercount INTEGER := 0 ;
+    Ferriswheelcount INTEGER := 0 ;
+    Gyrotowercount INTEGER := 0 ;
+    Rollercoastercount INTEGER := 0 ;
+    Waterridecount INTEGER := 0 ;
+    SpiralSlidecount INTEGER := 0 ;
+    Circuscount INTEGER := 0 ;
+    Gravitroncount INTEGER := 0 ;
+
+BEGIN
+    Carouselcount := new."Carousel";
+    Darkridecount := new."Darkride";
+    Droptowercount := new."Droptower";
+    Ferriswheelcount := new."Ferriswheel";
+    Gyrotowercount := new."Gyrotower";
+    Rollercoastercount := new."Rollercoaster";
+    Waterridecount := new."Waterride";
+    SpiralSlidecount := new."SpiralSlide";
+    Circuscount := new."Circus";
+    Gravitroncount := new."Gravitron";
+    totalcount := Carouselcount + Darkridecount + Droptowercount + Ferriswheelcount + Gyrotowercount + Rollercoastercount + Waterridecount + SpiralSlidecount + Circuscount + Gravitroncount;
+    insert into monthdetails("time", "month_rev", "month_count") values (new.time, 0, totalcount);
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_monthmccount
+    AFTER INSERT ON monthcount
+    FOR EACH ROW
+    EXECUTE PROCEDURE monthmcfill();
+
+CREATE OR REPLACE FUNCTION monthmrfill ()
+RETURNS TRIGGER AS $$
+DECLARE
+    totalprice INTEGER := 0;
+    Carouselprice INTEGER := 0 ;
+    Darkrideprice INTEGER := 0 ;
+    Droptowerprice INTEGER := 0 ;
+    Ferriswheelprice INTEGER := 0 ;
+    Gyrotowerprice INTEGER := 0 ;
+    Rollercoasterprice INTEGER := 0 ;
+    Waterrideprice INTEGER := 0 ;
+    SpiralSlideprice INTEGER := 0 ;
+    Circusprice INTEGER := 0 ;
+    Gravitronprice INTEGER := 0 ;
+
+BEGIN
+    Carouselprice := new."Carousel";
+    Darkrideprice := new."Darkride";
+    Droptowerprice := new."Droptower";
+    Ferriswheelprice := new."Ferriswheel";
+    Gyrotowerprice := new."Gyrotower";
+    Rollercoasterprice := new."Rollercoaster";
+    Waterrideprice:= new."Waterride";
+    SpiralSlideprice := new."SpiralSlide";
+    Circusprice := new."Circus";
+    Gravitronprice := new."Gravitron";
+    totalprice := Carouselprice + Darkrideprice + Droptowerprice + Ferriswheelprice + Gyrotowerprice + Rollercoasterprice + Waterrideprice + SpiralSlideprice + Circusprice + Gravitronprice;
+    update monthdetails set month_rev = totalprice where id = new.id;
+    RETURN new;
+END;$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_monthmrcount
+    AFTER INSERT ON monthrev
+    FOR EACH ROW
+    EXECUTE PROCEDURE monthmrfill();
+\end{lstlisting}

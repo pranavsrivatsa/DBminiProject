@@ -1,0 +1,41 @@
+\chapter{SQL Database Connectivity}
+
+\section{Opening a Connection}
+For the common case of having one Flask application all you have to do is to create your Flask application, load the configuration of choice and then create the SQLAlchemy object by passing it the application.
+Once created, that object then contains all the functions and helpers from both sqlalchemy and sqlalchemy.orm. Furthermore it provides a class called Model that is a declarative base which can be used to declare models:
+\begin{lstlisting}[language=Python]
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'database_system://username:password@IPAddress:port/database_name'
+db = SQLAlchemy(app)
+\end{lstlisting}
+\thispagestyle{fancy}
+
+\section{Closing a Connection}
+The application context keeps track of the application-level data during a request, CLI command, or other activity.
+Rather than passing the application around to each function, the \texttt{current\_app} and g proxies are accessed instead.
+The application context is created and destroyed as necessary. When a Flask application begins handling a request,
+it pushes an application context and a request context.
+When the request ends it pops the request context then the application context.
+Typically, an application context will have the same lifetime as a request.
+The application will call functions registered with \texttt{teardown\_appcontext()} when the application context is popped.
+\begin{lstlisting}[language=Python]
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+\end{lstlisting}
+\thispagestyle{fancy}
+\section{Executing a Query}
+\begin{lstlisting}
+customerrides = CustomerRidesLink.query.all()
+\end{lstlisting}
+\section{Close the Connection}
+You need to close the session after each request or application context shutdown.
+\begin{lstlisting}
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+\end{lstlisting}
+\thispagestyle{fancy}
