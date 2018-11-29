@@ -7,13 +7,6 @@ from alembic import op
 import populateDB
 
 
-# >rm -R migrations
-# >python3 models.py db init
-# >python3 models.py db migrate
-# >python3 models.py db upgrade
-# >python3 models.py seed
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
