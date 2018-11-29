@@ -3,7 +3,7 @@
 \section{Code For Major Functionalities}
 \subsection{Main Application}
 \thispagestyle{fancy}
-\begin{lstlisting}[language=Python]
+\begin{minted}[breaklines, breakanywhere,frame=single]{python}
 from flask import Flask, url_for, render_template, g, request, redirect, Markup, json
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -134,11 +134,11 @@ cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
 
 if __name__ == '__main__':
   app.run(host="localhost",port=5010, debug=True)
-\end{lstlisting}
+\end{minted}
 
 \subsection{Model}
 \thispagestyle{fancy}
-\begin{lstlisting}
+\begin{minted}[breaklines, breakanywhere,frame=single]{python}
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
@@ -272,11 +272,11 @@ def seed():
 
 if __name__=='__main__':
     manager.run()
-\end{lstlisting}
+\end{minted}
 
 \subsection{Populate Database}
 \thispagestyle{fancy}
-\begin{lstlisting}
+\begin{minted}[breaklines, breakanywhere,frame=single]{python}
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from faker import Faker
@@ -366,11 +366,11 @@ def populateCustomer():
 
 a = 1
 tim = datetime(2018,12,26,10,0)
-\end{lstlisting}
+\end{minted}
 
 \section{Procedures}
 \subsection{Consolidate day statistics}
-\begin{lstlisting}
+\begin{minted}[breaklines, breakanywhere,frame=single]{plpgsql}
 CREATE OR REPLACE FUNCTION daydcfill ()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -558,10 +558,10 @@ CREATE TRIGGER update_dayrev
         FOR EACH ROW
         WHEN ( extract (hour from new.time ) = 18)
         EXECUTE PROCEDURE daycountfill();
-\end{lstlisting}
+\end{minted}
 
 \subsection{Consolidate month statistics}
-\begin{lstlisting}
+\begin{minted}[breaklines, breakanywhere,frame=single]{plpgsql}
 CREATE OR REPLACE FUNCTION monthcountfill ()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -715,4 +715,4 @@ CREATE TRIGGER update_monthmrcount
     AFTER INSERT ON monthrev
     FOR EACH ROW
     EXECUTE PROCEDURE monthmrfill();
-\end{lstlisting}
+\end{minted}
