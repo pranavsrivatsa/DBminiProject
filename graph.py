@@ -89,3 +89,66 @@ def getDayRideCount():
         Circus.append(d.Circus)
         Gravitron.append(d.Gravitron)
     return Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+
+def getMonthStats():
+    monthstats = month.query.all()
+    dates = []
+    revenue = []
+    count = []
+    for d in monthstats:
+        dates.append(date_to_millis(d.time))
+        revenue.append(d.month_rev)
+        count.append(d.month_count)
+    return dates,revenue,count
+
+def getMonthRideRevenue():
+    monthRideRevenue = monthrev.query.all()
+    dates = []
+    Carousel = []
+    Darkride = []
+    Droptower = []
+    Ferriswheel = []
+    Gyrotower = []
+    Rollercoaster = []
+    Waterride = []
+    SpiralSlide = []
+    Circus = []
+    Gravitron = []
+    for d in monthRideRevenue:
+        dates.append(date_to_millis(d.time))
+        Carousel.append(d.Carousel)
+        Darkride.append(d.Darkride)
+        Droptower.append(d.Droptower)
+        Ferriswheel.append(d.Ferriswheel)
+        Gyrotower.append(d.Gyrotower)
+        Rollercoaster.append(d.Rollercoaster)
+        Waterride.append(d.Waterride)
+        SpiralSlide.append(d.SpiralSlide)
+        Circus.append(d.Circus)
+        Gravitron.append(d.Gravitron)
+    return dates,Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+
+def getMonthRideCount():
+    monthRideRevenue = monthcount.query.all()
+    Carousel = []
+    Darkride = []
+    Droptower = []
+    Ferriswheel = []
+    Gyrotower = []
+    Rollercoaster = []
+    Waterride = []
+    SpiralSlide = []
+    Circus = []
+    Gravitron = []
+    for d in monthRideRevenue:
+        Carousel.append(d.Carousel)
+        Darkride.append(d.Darkride)
+        Droptower.append(d.Droptower)
+        Ferriswheel.append(d.Ferriswheel)
+        Gyrotower.append(d.Gyrotower)
+        Rollercoaster.append(d.Rollercoaster)
+        Waterride.append(d.Waterride)
+        SpiralSlide.append(d.SpiralSlide)
+        Circus.append(d.Circus)
+        Gravitron.append(d.Gravitron)
+    return Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
