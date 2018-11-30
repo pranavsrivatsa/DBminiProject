@@ -4,229 +4,157 @@
   {% block met %}<meta http-equiv="refresh" content="10" >{% endblock %}
 {% endblock %}
 {% block content %}
-<div class="page-container">
-  <form action="dashboard" method="post">
-    <!-- main content area start -->
-    <div class="main-content">
-        <!-- page title area start -->
-        <div class="page-title-area">
-            <div class="row align-items-center">
-              <div class="card">
-                <div class="col-sm-6">
-                    <div class="breadcrumbs-area clearfix">
-                        <h4 class="page-title pull-left">Dashboard</h4>
-                        <ul class="breadcrumbs pull-left">
-                            <li><a href="index.html">Home</a></li>
-                            <li><span>Dashboard</span></li>
-                        </ul>
-                    </div>
-                </div>
-                    <div class="card-body">
-                        <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="popcust">Populate Customers</button>
-                        <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="startpark">Start park</button>
-                        <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="stoppark">Stop park</button>
-                    </div>
-                </div>
+<form action="dashboard" method="post">
+    <!-- page title area start -->
+    <div class="page-title-area">
+        <div class="row align-items-center">
+          <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="popcust">Populate Customers</button>
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="startpark">Start park</button>
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="stoppark">Stop park</button>
             </div>
+          </div>
         </div>
-        <!-- page title area end -->
-        <div class="main-content-inner">
-          <div class="row">
-            <!-- per day stats area start -->
-            <div class="col-6 mt-5">
-              <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">Per Day Statistics</h4>
-                    <div id="" class="data-tables datatable-primary">
-                        <table id="" class="datatable text-center">
-                              <thead class="text-capitalize">
-                                <tr>
-                                    <td>Date</td>
-                                    <td>Revenue</td>
-                                    <td>Footfall</td>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% for day in dayStats: %}
-                                <tr>
-                                    <td>{{ day.time.strftime("%d %b %Y") }}</td>
-                                    <td>{{ day.day_rev }}</td>
-                                    <td>{{ day.day_count }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-          </div>
-            <!-- per day stats area end -->
-            <div class="col-6 mt-5">
-              <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">Customer Rides</h4>
-                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#add-modal">Add New</button>
-                    <div id="data-tables" class="data-tables datatable-primary">
-                      <table id="" class="datatable text-center">
-                        <thead class="text-capitalize">
-                          <tr>
-                            <td>Customer</td>
-                            <td>Ride</td>
-                            <td>Date-Time</td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for customer in customerRides: %}
-                              <tr>
-                                <td>{{ customer.customer.name }}</td>
-                                <td>{{ customer.ride.name }}</td>
-                                <td>{{ customer.time.strftime("%H:%M:%S, %d %b %Y") }}
-                                  &emsp;<a href="/edit/{{ customer.id }}" role="button">Edit</a>
-                                  &emsp;<a href="/delete/{{ customer.id }}" role="button">Delete</a>
-                                </td>
-                              </tr>
-                          {% endfor %}
+    </div>
+    <!-- page title area end -->
+    <div class="main-content-inner">
+      <div class="row">
+        <!-- per day stats area start -->
+        <div class="col-6 mt-5">
+          <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Per Day Statistics</h4>
+                <div id="" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                          <thead class="text-capitalize">
+                            <tr>
+                                <td>Date</td>
+                                <td>Revenue</td>
+                                <td>Footfall</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for day in dayStats: %}
+                            <tr>
+                                <td>{{ day.time.strftime("%d %b %Y") }}</td>
+                                <td>{{ day.day_rev }}</td>
+                                <td>{{ day.day_count }}</td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
-                      </table>
-                    </div>
-                  </div>
+                    </table>
                 </div>
             </div>
-          </div>
-            <!-- per day ride count stats area start -->
-            <div class="col-15 mt-5">
-              <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">Per Day Ride Count Statistics</h4>
-                    <div id="data-tables" class="data-tables datatable-primary">
-                        <table id="" class="datatable text-center">
-                              <thead class="text-capitalize">
-                                <tr>
-                                    <td>Date</td>
-                                    <td>Carousel</td>
-                                    <td>Darkride</td>
-                                    <td>Droptower</td>
-                                    <td>Ferriswheel</td>
-                                    <td>Gyrotower</td>
-                                    <td>Rollercoaster</td>
-                                    <td>Waterride</td>
-                                    <td>SpiralSlide</td>
-                                    <td>Circus</td>
-                                    <td>Gravitron</td>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% for day in dayridecnt: %}
-                                <tr>
-                                    <td>{{ day.time.strftime("%d %b %Y") }}</td>
-                                    <td>{{ day.Carousel }}</td>
-                                    <td>{{ day.Darkride }}</td>
-                                    <td>{{ day.Droptower }}</td>
-                                    <td>{{ day.Ferriswheel }}</td>
-                                    <td>{{ day.Gyrotower }}</td>
-                                    <td>{{ day.Rollercoaster }}</td>
-                                    <td>{{ day.Waterride }}</td>
-                                    <td>{{ day.SpiralSlide }}</td>
-                                    <td>{{ day.Circus }}</td>
-                                    <td>{{ day.Gravitron }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-          </div>
-            <!-- per day ride count stats area end -->
-            <!-- per day ride Revenue stats area start -->
-            <div class="col-15 mt-5">
-              <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">Per Day Ride Revenue Statistics</h4>
-                    <div id="data-tables" class="data-tables datatable-primary">
-                        <table id="" class="datatable text-center">
-                              <thead class="text-capitalize">
-                                <tr>
-                                    <td>Date</td>
-                                    <td>Carousel</td>
-                                    <td>Darkride</td>
-                                    <td>Droptower</td>
-                                    <td>Ferriswheel</td>
-                                    <td>Gyrotower</td>
-                                    <td>Rollercoaster</td>
-                                    <td>Waterride</td>
-                                    <td>SpiralSlide</td>
-                                    <td>Circus</td>
-                                    <td>Gravitron</td>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% for day in dayriderev: %}
-                                <tr>
-                                    <td>{{ day.time.strftime("%d %b %Y") }}</td>
-                                    <td>{{ day.Carousel }}</td>
-                                    <td>{{ day.Darkride }}</td>
-                                    <td>{{ day.Droptower }}</td>
-                                    <td>{{ day.Ferriswheel }}</td>
-                                    <td>{{ day.Gyrotower }}</td>
-                                    <td>{{ day.Rollercoaster }}</td>
-                                    <td>{{ day.Waterride }}</td>
-                                    <td>{{ day.SpiralSlide }}</td>
-                                    <td>{{ day.Circus }}</td>
-                                    <td>{{ day.Gravitron }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            <!-- per day ride Revenue stats area end -->
-          </div>
         </div>
       </div>
-    </div>
-    <!-- main content area end -->
-    <!-- footer area start-->
-    <footer>
-        <div class="footer-area">
-            <p>© Copyright 2018 . All right reserved</p>
-        </div>
-    </footer>
-    <!-- footer area end-->
-<!-- page container area end -->
-  </form>
-</div>
-
-<div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div id="div-forms">
-        <form id="edit-form" action="backend" method="post">
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-5 mt-5">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="customer" placeholder="Customer">
+        <!-- per day stats area end -->
+        <div class="col-lg-12 mt-5">
+            <div class="card">
+                <div class="card-body"-->
+                    <h4 class="header-title mb-0">Per Day Statistics</h4>
+                    <div id="day_stats" style="width: 100%; height: 500px;"></div>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="ride" placeholder="Ride">
-                </div>
-                <div class="form-group">
-                    <input
-                       type="text"
-                       class="form-control datetime"
-                       name="time_in"
-                       placeholder="Time in"
-                    >
-                </div>
-                <button type="submit" class="btn btn-block btn-primary">Submit</button>
-              </div>
             </div>
-          </div>
-        </form>
+        </div>
+      </div>
+        <!-- per day ride count stats area start -->
+        <div class="col-15 mt-5">
+          <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Per Day Ride Count Statistics</h4>
+                <div id="data-tables" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                          <thead class="text-capitalize">
+                            <tr>
+                                <td>Date</td>
+                                <td>Carousel</td>
+                                <td>Darkride</td>
+                                <td>Droptower</td>
+                                <td>Ferriswheel</td>
+                                <td>Gyrotower</td>
+                                <td>Rollercoaster</td>
+                                <td>Waterride</td>
+                                <td>SpiralSlide</td>
+                                <td>Circus</td>
+                                <td>Gravitron</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for day in dayridecnt: %}
+                            <tr>
+                                <td>{{ day.time.strftime("%d %b %Y") }}</td>
+                                <td>{{ day.Carousel }}</td>
+                                <td>{{ day.Darkride }}</td>
+                                <td>{{ day.Droptower }}</td>
+                                <td>{{ day.Ferriswheel }}</td>
+                                <td>{{ day.Gyrotower }}</td>
+                                <td>{{ day.Rollercoaster }}</td>
+                                <td>{{ day.Waterride }}</td>
+                                <td>{{ day.SpiralSlide }}</td>
+                                <td>{{ day.Circus }}</td>
+                                <td>{{ day.Gravitron }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+        <!-- per day ride count stats area end -->
+        <!-- per day ride Revenue stats area start -->
+        <div class="col-15 mt-5">
+          <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Per Day Ride Revenue Statistics</h4>
+                <div id="data-tables" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                          <thead class="text-capitalize">
+                            <tr>
+                                <td>Date</td>
+                                <td>Carousel</td>
+                                <td>Darkride</td>
+                                <td>Droptower</td>
+                                <td>Ferriswheel</td>
+                                <td>Gyrotower</td>
+                                <td>Rollercoaster</td>
+                                <td>Waterride</td>
+                                <td>SpiralSlide</td>
+                                <td>Circus</td>
+                                <td>Gravitron</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for day in dayriderev: %}
+                            <tr>
+                                <td>{{ day.time.strftime("%d %b %Y") }}</td>
+                                <td>{{ day.Carousel }}</td>
+                                <td>{{ day.Darkride }}</td>
+                                <td>{{ day.Droptower }}</td>
+                                <td>{{ day.Ferriswheel }}</td>
+                                <td>{{ day.Gyrotower }}</td>
+                                <td>{{ day.Rollercoaster }}</td>
+                                <td>{{ day.Waterride }}</td>
+                                <td>{{ day.SpiralSlide }}</td>
+                                <td>{{ day.Circus }}</td>
+                                <td>{{ day.Gravitron }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <!-- per day ride Revenue stats area end -->
       </div>
     </div>
   </div>
-</div>
-
+  <!-- footer area start-->
+  <footer>
+      <div class="footer-area">
+          <p>© Copyright 2018 . All right reserved</p>
+      </div>
+  </footer>
+  <!-- footer area end-->
+</form>
 {% endblock %}

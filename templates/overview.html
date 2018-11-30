@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block header %}
+  {% block title %}Staff details{% endblock %}
+  {% block met %}<meta http-equiv="refresh" content="10" >{% endblock %}
+{% endblock %}
+{% block content %}
+<form action="dashboard" method="post">
+    <!-- page title area start -->
+    <div class="page-title-area">
+        <div class="row align-items-center">
+          <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="popcust">Populate Customers</button>
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="startpark">Start park</button>
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="stoppark">Stop park</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- page title area end -->
+    <div class="main-content-inner">
+      <div class="row">
+      <div class="col-6 mt-5">
+        <div class="card">
+          <div class="card-body">
+              <h4 class="header-title">Customers</h4>
+              <div id="data-tables" class="data-tables datatable-primary">
+                <table id="" class="datatable text-center">
+                  <thead class="text-capitalize">
+                    <tr>
+                      <td>Name</td>
+                      <td>Age</td>
+                      <td>Type</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for customer in Customers: %}
+                        <tr>
+                          <td>{{ customer.name }}</td>
+                          <td>{{ customer.age }}</td>
+                          <td>{{ customer.type }}</td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!-- per day stats area end -->
+        <div class="col-lg-6 mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-0">Visitor Graph</h4>
+                    <canvas id="visitor_graph" class="chart"></canvas>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    <!-- per day stats area end -->
+    </div>
+          <!-- per day stats area start -->
+          <div class="row">
+          <div class="col-6 mt-5">
+            <div class="card">
+              <div class="card-body">
+                  <h4 class="header-title">Customer Rides</h4>
+                  <button type="button" class="btn btn-light" data-toggle="modal" data-target="#add-modal">Add New</button>
+                  <div id="data-tables" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                      <thead class="text-capitalize">
+                        <tr>
+                          <td>Customer</td>
+                          <td>Ride</td>
+                          <td>Date-Time</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for customer in CustomerRides: %}
+                            <tr>
+                              <td>{{ customer.customer.name }}</td>
+                              <td>{{ customer.ride.name }}</td>
+                              <td>{{ customer.time.strftime("%H:%M:%S, %d %b %Y") }}
+                                &emsp;<a href="/edit/{{ customer.id }}" role="button">Edit</a>
+                                &emsp;<a href="/delete/{{ customer.id }}" role="button">Delete</a>
+                              </td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+      </div>
+  <!-- footer area start-->
+  <footer>
+      <div class="footer-area">
+          <p>© Copyright 2018 . All right reserved</p>
+      </div>
+  </footer>
+  <!-- footer area end-->
+</form>
+
+<div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="div-forms">
+        <form id="edit-form" action="backend" method="post">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-5 mt-5">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="customer" placeholder="Customer">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="ride" placeholder="Ride">
+                </div>
+                <div class="form-group">
+                    <input
+                       type="text"
+                       class="form-control datetime"
+                       name="time_in"
+                       placeholder="Time in"
+                    >
+                </div>
+                <button type="submit" class="btn btn-block btn-primary">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

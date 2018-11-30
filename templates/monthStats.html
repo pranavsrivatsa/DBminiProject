@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block header %}
+  {% block title %}Staff details{% endblock %}
+  {% block met %}<meta http-equiv="refresh" content="10" >{% endblock %}
+{% endblock %}
+{% block content %}
+<form action="dashboard" method="post">
+    <!-- page title area start -->
+    <div class="page-title-area">
+        <div class="row align-items-center">
+          <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="popcust">Populate Customers</button>
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="startpark">Start park</button>
+                <button type="submit" class="btn btn-flat btn-primary mb-3" name="pop" value="stoppark">Stop park</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- page title area end -->
+    <div class="main-content-inner">
+      <div class="row">
+        <!-- per month stats area start -->
+        <div class="col-6 mt-5">
+          <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Per Month Statistics</h4>
+                <div id="" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                          <thead class="text-capitalize">
+                            <tr>
+                                <td>Date</td>
+                                <td>Revenue</td>
+                                <td>Footfall</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for month in monthStats: %}
+                            <tr>
+                                <td>{{ month.time.strftime("%d %b %Y") }}</td>
+                                <td>{{ month.month_rev }}</td>
+                                <td>{{ month.month_count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+        <!-- per month stats area end -->
+
+      </div>
+        <!-- per month ride count stats area start -->
+        <div class="col-15 mt-5">
+          <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Per month Ride Count Statistics</h4>
+                <div id="data-tables" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                          <thead class="text-capitalize">
+                            <tr>
+                                <td>Date</td>
+                                <td>Carousel</td>
+                                <td>Darkride</td>
+                                <td>Droptower</td>
+                                <td>Ferriswheel</td>
+                                <td>Gyrotower</td>
+                                <td>Rollercoaster</td>
+                                <td>Waterride</td>
+                                <td>SpiralSlide</td>
+                                <td>Circus</td>
+                                <td>Gravitron</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for month in monthridecnt: %}
+                            <tr>
+                                <td>{{ month.time.strftime("%d %b %Y") }}</td>
+                                <td>{{ month.Carousel }}</td>
+                                <td>{{ month.Darkride }}</td>
+                                <td>{{ month.Droptower }}</td>
+                                <td>{{ month.Ferriswheel }}</td>
+                                <td>{{ month.Gyrotower }}</td>
+                                <td>{{ month.Rollercoaster }}</td>
+                                <td>{{ month.Waterride }}</td>
+                                <td>{{ month.SpiralSlide }}</td>
+                                <td>{{ month.Circus }}</td>
+                                <td>{{ month.Gravitron }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+        <!-- per month ride count stats area end -->
+        <!-- per month ride Revenue stats area start -->
+        <div class="col-15 mt-5">
+          <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Per month Ride Revenue Statistics</h4>
+                <div id="data-tables" class="data-tables datatable-primary">
+                    <table id="" class="datatable text-center">
+                          <thead class="text-capitalize">
+                            <tr>
+                                <td>Date</td>
+                                <td>Carousel</td>
+                                <td>Darkride</td>
+                                <td>Droptower</td>
+                                <td>Ferriswheel</td>
+                                <td>Gyrotower</td>
+                                <td>Rollercoaster</td>
+                                <td>Waterride</td>
+                                <td>SpiralSlide</td>
+                                <td>Circus</td>
+                                <td>Gravitron</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for month in monthriderev: %}
+                            <tr>
+                                <td>{{ month.time.strftime("%d %b %Y") }}</td>
+                                <td>{{ month.Carousel }}</td>
+                                <td>{{ month.Darkride }}</td>
+                                <td>{{ month.Droptower }}</td>
+                                <td>{{ month.Ferriswheel }}</td>
+                                <td>{{ month.Gyrotower }}</td>
+                                <td>{{ month.Rollercoaster }}</td>
+                                <td>{{ month.Waterride }}</td>
+                                <td>{{ month.SpiralSlide }}</td>
+                                <td>{{ month.Circus }}</td>
+                                <td>{{ month.Gravitron }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <!-- per month ride Revenue stats area end -->
+      </div>
+    </div>
+  </div>
+  <!-- footer area start-->
+  <footer>
+      <div class="footer-area">
+          <p>© Copyright 2018 . All right reserved</p>
+      </div>
+  </footer>
+  <!-- footer area end-->
+</form>
+{% endblock %}
