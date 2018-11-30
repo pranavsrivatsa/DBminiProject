@@ -20,15 +20,15 @@
 \titleformat{\chapter}[display]
   {\normalfont\Large\bfseries}{\filright\chaptertitlename\ \thechapter}
   {20pt}{\Large\filcenter}
+\titlespacing*{\chapter}{0pt}{-30pt}{40pt}
 
-
-\usepackage[bookmarks, colorlinks=false, pdfborder={0 0 0}, pdftitle={<pdf title here>}, pdfauthor={<author's name here>}, pdfsubject={<subject here>}, pdfkeywords={<keywords here>}]{hyperref}
+\usepackage[bookmarks, colorlinks=false, pdfborder={0 0 0}, pdftitle={DBMS Mini Project}, pdfauthor={Rahul Devajji}, pdfsubject={Project Report}, pdfkeywords={Report}]{hyperref}
 
 \usepackage{etoolbox} % enable fancyhdr on chapter pages.
 \patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 \patchcmd{\lstlisting}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 
-\renewcommand\bibname{References}
+\renewcommand\bibname{Bibliography}
 
 \pagestyle{fancy}
 \fancyhf{}
