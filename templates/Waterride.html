@@ -20,7 +20,7 @@
                     width: 60%;
                 }
     .hero-image {
-                    background-image: url(/home/crystal_space/PycharmProjects/DBminiProject/DBminiProject/templates/water.jpg);
+                    background-image: url("{{url_for('static', filename='assets/images/bg/water.jpg')}}");
                     /* filter: blur(2px);
                     -webkit-filter: blur(2px); */
                     background-color: #999999   ;
@@ -40,7 +40,7 @@
                 <!-- <img src="https://www.childrensmuseum.org/sites/default/files/ExhibitsIconsPlaces_Carousel_Large_003.jpg" class="center"> -->
                 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                 <p style="text-decoration: white;"><b>Water ride is launched from a 17-metre (56 ft) platform. A single rider is loaded into a launch chamber where they stand with their hands across their chest. After a countdown, a trapdoor opens and the rider immediately drops 16 metres (52 ft) inside a near vertical slide. The rider accelerates to 60 kilometres per hour (37 mph) in just 2 seconds before entering the loop element.</b></p>
-                <p>Price per customer: Rs.300</p> 
+                <p>Price per customer: Rs.300</p>
                 <br>
                 <!-- <p style="float: left;"><img src="https://www.childrensmuseum.org/sites/default/files/ExhibitsIconsPlaces_Carousel_Large_003.jpg" height="400" width="800" border="1px"></p>
                 <p>Carousels may not be able to compete with many of today’s technically advanced rides, yet they are still beloved by amusement park visitors of all ages. They also play an important role in the evolution of amusement parks. As one of the earliest rides to appear at the fairs and amusement areas that were the blueprints for today’s amusement parks, they helped whet the public’s appetite for bigger and better amusement park rides.</p>

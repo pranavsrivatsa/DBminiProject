@@ -5,8 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Circus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
     <style>
         body{
             color: black
@@ -20,9 +18,7 @@
                     width: 60%;
                 }
     .hero-image {
-                    background-image: url(/home/crystal_space/PycharmProjects/DBminiProject/DBminiProject/templates/cir.jpg);
-                    /* filter: blur(2px);
-                    -webkit-filter: blur(2px); */
+                    background-image: url("{{url_for('static', filename='assets/images/bg/cir.jpg')}}");
                     background-color: #999999   ;
                     height: 1040px;
                     background-position: center;
@@ -33,20 +29,13 @@
                  }
     </style>
 </head>
- <body class="hero-image"><!--</body> style="background-image:url(https://www.childrensmuseum.org/sites/default/files/ExhibitsIconsPlaces_Carousel_Large_003.jpg)"> -->
+ <body class="hero-image">
         <div >
                 <h1 style="text-decoration: underline;">Circus</h1>
-                <!-- <img src="https://www.childrensmuseum.org/sites/default/files/ExhibitsIconsPlaces_Carousel_Large_003.jpg"> -->
-                <!-- <img src="https://www.childrensmuseum.org/sites/default/files/ExhibitsIconsPlaces_Carousel_Large_003.jpg" class="center"> -->
                 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                 <p style="text-decoration: white;"><b>A company of performers who put on diverse entertainment shows that may include clowns, acrobats, trained animals, trapeze acts, musicians, dancers, hoopers, tightrope walkers, jugglers, magicians, unicyclists, as well as other object manipulation and stunt-oriented artists.  </b></p>
-                <p>Price per customer: Rs.200</p> 
+                <p>Price per customer: Rs.200</p>
                 <br>
-                <!-- <p style="float: left;"><img src="https://www.childrensmuseum.org/sites/default/files/ExhibitsIconsPlaces_Carousel_Large_003.jpg" height="400" width="800" border="1px"></p>
-                <p>Carousels may not be able to compete with many of today’s technically advanced rides, yet they are still beloved by amusement park visitors of all ages. They also play an important role in the evolution of amusement parks. As one of the earliest rides to appear at the fairs and amusement areas that were the blueprints for today’s amusement parks, they helped whet the public’s appetite for bigger and better amusement park rides.</p>
-                <p>Price per customer: Rs.200</p> -->
             </div>
 </body>
 </html>
-
-<!-- style="background-color:lightblue" -->
