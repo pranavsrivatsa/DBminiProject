@@ -69,7 +69,7 @@ def populateCustomer():
     age50 = list(range(31,50))
     age70 = list(range(51,70))
     age100 = list(range(71,100))
-    wr = age10*70+age20*20+age30*5+age50*3+age70*1+age100*1
+    wr = age10*10+age20*30+age30*50+age50*5+age70*4+age100*1
     while count > 0:
         name = fake.name()
         age = random.choice(wr)
