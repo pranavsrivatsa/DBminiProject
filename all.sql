@@ -220,7 +220,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER update_monthcount
     AFTER INSERT ON daycount
     FOR EACH ROW
-    WHEN ( extract (day from new.time ) = 28)
+    WHEN ( extract (day from new.time ) = 27)
     EXECUTE PROCEDURE monthcountfill();
 
 CREATE OR REPLACE FUNCTION monthrevfill ()
@@ -263,7 +263,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER update_monthrev
     AFTER INSERT ON dayrev
     FOR EACH ROW
-    WHEN ( extract (day from new.time ) = 28)
+    WHEN ( extract (day from new.time ) = 27)
     EXECUTE PROCEDURE monthrevfill();
 
 CREATE OR REPLACE FUNCTION monthmcfill ()

@@ -33,8 +33,8 @@ def populateCustomerRides():
         newTime = tim + timedelta(0,1800) # days, seconds, then other fields.
         if newTime.hour == 18:
             tim = datetime(newTime.year,newTime.month,newTime.day+1,10,00)
-            time.sleep(5)
-            if newTime.day == 28:
+            #time.sleep(2)
+            if newTime.day == 27:
                 time.sleep(3)
                 if newTime.month < 12:
                     tim = datetime(newTime.year,newTime.month+1,1,10,00)
@@ -45,7 +45,7 @@ def populateCustomerRides():
         customerride = models.CustomerRidesLink(customerId=customer.id,rideId=ride.id,time=newTime)
         db.session.add(customerride)
         db.session.commit()
-        time.sleep(3)
+        #time.sleep(3)
 
 def populateRide():
     ride_list = ['Carousel','Darkride','Droptower','Ferriswheel','Gyrotower','Rollercoaster','Waterride','SpiralSlide','Circus','Gravitron']
