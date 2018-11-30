@@ -46,41 +46,65 @@ def register():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def index():
-	daystats = day.query.all()
-	dayRideRev = dayrev.query.all()
-	dayRideCnt = daycount.query.all()
-	if request.method == "POST":
-	    if request.form['pop'] == 'popcust':
-	        populateDB.populateCustomer()
-	    if request.form['pop'] == 'startpark':
-	        populateDB.populateCustomerRides()
-	    if request.form['pop'] == 'stoppark':
-		    populateDB.change()
-	return render_template("dashboard.html",dayStats=daystats,dayriderev=dayRideRev,dayridecnt=dayRideCnt,customerRides=customerrides,ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
+    daystats = day.query.all()
+    dayRideRev = dayrev.query.all()
+    dayRideCnt = daycount.query.all()
+    if request.method == "POST":
+        if request.form['pop'] == 'popcust':
+            populateDB.populateCustomer()
+        if request.form['pop'] == 'startpark':
+            populateDB.populateCustomerRides()
+        if request.form['pop'] == 'stoppark':
+    	    populateDB.change()
+    datems,dayrevenue,daycunt = graph.getDayStats()
+    days = len(datems)
+    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+    hours = len(ridedates)
+    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
+    return render_template("dashboard.html",dayStats=daystats,dayriderev=dayRideRev,dayridecnt=dayRideCnt,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 @app.route("/monthStats", methods=['GET', 'POST'])
 def indexMonth():
-	monthstats = month.query.all()
-	monthRideRev = monthrev.query.all()
-	monthRideCnt = monthcount.query.all()
-	if request.method == "POST":
-	    if request.form['pop'] == 'popcust':
-	        populateDB.populateCustomer()
-	    if request.form['pop'] == 'startpark':
-	        populateDB.populateCustomerRides()
-	    if request.form['pop'] == 'stoppark':
-		    populateDB.change()
-	return render_template("monthStats.html",monthStats=monthstats,monthriderev=monthRideRev,monthridecnt=monthRideCnt,customerRides=customerrides,ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
+    monthstats = month.query.all()
+    monthRideRev = monthrev.query.all()
+    monthRideCnt = monthcount.query.all()
+    if request.method == "POST":
+        if request.form['pop'] == 'popcust':
+            populateDB.populateCustomer()
+        if request.form['pop'] == 'startpark':
+            populateDB.populateCustomerRides()
+        if request.form['pop'] == 'stoppark':
+    	    populateDB.change()
+    ageList = graph.getAgeRanges()
+    datems,dayrevenue,daycunt = graph.getDayStats()
+    days = len(datems)
+    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+    hours = len(ridedates)
+    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
+    return render_template("monthStats.html",monthStats=monthstats,monthriderev=monthRideRev,monthridecnt=monthRideCnt,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 @app.route("/Overview", methods=['GET'])
 def overview():
     customers = Customer.query.all()
     rides = Ride.query.all()
+    customerrides = CustomerRidesLink.query.all()
+    ageList = graph.getAgeRanges()
+    datems,dayrevenue,daycunt = graph.getDayStats()
+    days = len(datems)
+    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+    hours = len(ridedates)
+    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
     return render_template("overview.html",Customers=customers,Rides=rides,CustomerRides=customerrides,ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 @app.route("/graphs",methods=['GET'])
 def getGraph():
-	return render_template("graphs.html",ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
+    ageList = graph.getAgeRanges()
+    datems,dayrevenue,daycunt = graph.getDayStats()
+    days = len(datems)
+    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+    hours = len(ridedates)
+    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
+    return render_template("graphs.html",ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 @app.route("/backend", methods=['POST', 'GET'])
 def backend():
@@ -137,7 +161,7 @@ def delete_record(id):
 @app.route("/Rides", methods=['GET'])
 def rides():
     rides = Ride.query.all()
-    return render_template("Rides.html",Rides=rides,CustomerRides=customerrides,ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
+    return render_template("Rides.html",Rides=rides)
 
 @app.route("/Carousel", methods=['GET'])
 def carousel():
@@ -178,14 +202,6 @@ def gravitron():
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db.session.remove()
-
-customerrides = CustomerRidesLink.query.all()
-ageList = graph.getAgeRanges()
-datems,dayrevenue,daycunt = graph.getDayStats()
-days = len(datems)
-ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
-hours = len(ridedates)
-cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
 
 if __name__ == '__main__':
 	app.run(host="localhost",port=5010, debug=True)
