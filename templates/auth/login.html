@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Login - srtdash</title>
+    <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
     <link rel="stylesheet" href="{{url_for('static', filename='assets/css/bootstrap.min.css')}}">
@@ -24,7 +24,7 @@
     <script src="{{url_for('static', filename='assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
 </head>
 
-<body background:"{{ url_for('static', filename='pic.jpg')}}">
+<body><!--  background:"{{ url_for('static', filename='pic.jpg')}}"> -->
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -42,11 +42,14 @@
                         <h1>Login Page</h1>
                         <br> 
                         <br>
+                        <br>
                         <p style="font-size:28px">Hello there!</p>
                         <br>
-                        <p style="font-size:22px"> Welcome to the Amusement Park Management Park Automation and Management System!</p>
                         <br> 
                         <br>
+                        <p style="font-size:22px"> Welcome to the Amusement Park Automation and Management System!</p>
+                        <br> 
+                        
                         <p style="font-size:22px">Please Sign in</p>
                     </div>
                     <div class="login-form-body">
@@ -76,8 +79,6 @@
             </div>
         </div>
     </div>
-    <!-- login area end -->
-    <!-- jquery latest version -->
     <!-- login area end -->
     <!-- jquery latest version -->
     <script src="{{url_for('static', filename='assets/js/vendor/jquery-2.2.4.min.js')}}"></script>
