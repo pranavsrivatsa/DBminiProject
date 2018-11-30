@@ -75,12 +75,11 @@ def indexMonth():
             populateDB.populateCustomerRides()
         if request.form['pop'] == 'stoppark':
     	    populateDB.change()
-    ageList = graph.getAgeRanges()
-    datems,dayrevenue,daycunt = graph.getDayStats()
+    datems,dayrevenue,daycunt = graph.getMonthStats()
     days = len(datems)
-    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
+    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getMonthRideRevenue()
     hours = len(ridedates)
-    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
+    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getMonthRideCount()
     return render_template("monthStats.html",monthStats=monthstats,monthriderev=monthRideRev,monthridecnt=monthRideCnt,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 @app.route("/Overview", methods=['GET'])
@@ -95,16 +94,6 @@ def overview():
     hours = len(ridedates)
     cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
     return render_template("overview.html",Customers=customers,Rides=rides,CustomerRides=customerrides,ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
-
-@app.route("/graphs",methods=['GET'])
-def getGraph():
-    ageList = graph.getAgeRanges()
-    datems,dayrevenue,daycunt = graph.getDayStats()
-    days = len(datems)
-    ridedates,cr,drr,dtr,fwr,gtr,rcr,wrr,ssr,cir,gr = graph.getDayRideRevenue()
-    hours = len(ridedates)
-    cc,drc,dtc,fwc,gtc,rcc,wrc,ssc,cic,gc = graph.getDayRideCount()
-    return render_template("graphs.html",ageRanges=ageList,Days=days,Hours=hours,dates=datems,dayRevenue=dayrevenue,dayCount=daycunt,rideDates=ridedates,CR=cr,DRR=drr,DTR=dtr,FWR=fwr,GTR=gtr,RCR=rcr,WRR=wrr,SSR=ssr,CIR=cir,GR=gr,CC=cc,DRC=drc,DTC=dtc,FWC=fwc,GTC=gtc,RCC=rcc,WRC=wrc,SSC=ssc,CIC=cic,GC=gc)
 
 @app.route("/backend", methods=['POST', 'GET'])
 def backend():

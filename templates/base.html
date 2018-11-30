@@ -50,7 +50,6 @@
             <ul class="metismenu" id="menu">
                 <li><a href="{{url_for('index')}}"><i class="ti-receipt"></i> <span>Day Statistics</span></a></li>
                 <li><a href="{{url_for('indexMonth')}}"><i class="ti-receipt"></i> <span>Month Statistics</span></a></li>
-                <li><a href="{{url_for('getGraph')}}"><i class="ti-map-alt"></i> <span>Graphs</span></a></li>
                 <li><a href="{{url_for('overview')}}"><i class="ti-map-alt"></i> <span>Customer and Rides</span></a></li>
                 <li><a href="{{url_for('rides')}}"><i class="ti-map-alt"></i> <span>Attractions</span></a></li>
             </ul>
@@ -132,6 +131,9 @@
       renderDayGraph({{dates|safe}},{{dayRevenue|safe}},{{dayCount|safe}},{{Days}});
       renderRideDayRevenueGraph({{rideDates|safe}},{{CR|safe}},{{DRR|safe}},{{DTR|safe}},{{FWR|safe}},{{GTR|safe}},{{RCR|safe}},{{WRR|safe}},{{SSR|safe}},{{CIR|safe}},{{GR|safe}},{{Hours}});
       renderRideDayCountGraph({{rideDates|safe}},{{CC|safe}},{{DRC|safe}},{{DTC|safe}},{{FWC|safe}},{{GTC|safe}},{{RCC|safe}},{{WRC|safe}},{{SSC|safe}},{{CIC|safe}},{{GC|safe}},{{Hours}});
+      renderMonthGraph({{dates|safe}},{{dayRevenue|safe}},{{dayCount|safe}},{{Days}});
+      renderRideMonthRevenueGraph({{rideDates|safe}},{{CR|safe}},{{DRR|safe}},{{DTR|safe}},{{FWR|safe}},{{GTR|safe}},{{RCR|safe}},{{WRR|safe}},{{SSR|safe}},{{CIR|safe}},{{GR|safe}},{{Hours}});
+      renderRideMonthCountGraph({{rideDates|safe}},{{CC|safe}},{{DRC|safe}},{{DTC|safe}},{{FWC|safe}},{{GTC|safe}},{{RCC|safe}},{{WRC|safe}},{{SSC|safe}},{{CIC|safe}},{{GC|safe}},{{Hours}});
       $(document).ready(function() { $('.datatable').dataTable(); });
     </script>
 </body>
