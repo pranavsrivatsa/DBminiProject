@@ -29,7 +29,7 @@ def login():
 			error = "Invalid Credentials."
 			return render_template('auth/login.html', error=error)
 		else:
-			return redirect('/dashboard')
+			return redirect('/Overview')
 	else:
 		return render_template("auth/login.html")
 
@@ -40,7 +40,7 @@ def register():
 		user = Account(fullname=inputCredentials["InputName"], email=inputCredentials["InputEmail"], password=inputCredentials["InputPassword"])
 		db.session.add(user)
 		db.session.commit()
-		return redirect(url_for("index"))
+		return redirect(url_for("overview"))
 	else:
 		return render_template("auth/register.html")
 
