@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from datetime import datetime
-from alembic import op
 import populateDB
 
 
@@ -17,6 +16,7 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
+
 class Account(db.Model):
     __tablename__ = 'account'
     id = db.Column(db.Integer, primary_key=True)
@@ -27,6 +27,7 @@ class Account(db.Model):
     def __repr__(self):
         return self.password
 
+
 class Customer(db.Model):
     __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)
@@ -35,12 +36,14 @@ class Customer(db.Model):
     type = db.Column(db.String(128), nullable=False)
     rides = db.relationship('CustomerRidesLink')
 
+
 class Ride(db.Model):
     __tablename__ = 'ride'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     maintenance_cost = db.Column(db.Integer, nullable=False)
+
 
 class CustomerRidesLink(db.Model):
     __tablename__ = 'customerrides'
@@ -51,6 +54,7 @@ class CustomerRidesLink(db.Model):
     ride = db.relationship('Ride')
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+
 class day(db.Model):
     __tablename__ = 'daydetails'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,10 +62,11 @@ class day(db.Model):
     day_rev = db.Column(db.Integer)
     day_count = db.Column(db.Integer)
 
+
 class dayrev(db.Model):
     __tablename__ = 'dayrev'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -73,10 +78,11 @@ class dayrev(db.Model):
     Circus = db.Column(db.Integer)
     Gravitron = db.Column(db.Integer)
 
+
 class daycount(db.Model):
     __tablename__ = 'daycount'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -87,6 +93,7 @@ class daycount(db.Model):
     SpiralSlide = db.Column(db.Integer)
     Circus = db.Column(db.Integer)
     Gravitron = db.Column(db.Integer)
+
 
 class month(db.Model):
     __tablename__ = 'monthdetails'
@@ -95,10 +102,11 @@ class month(db.Model):
     month_rev = db.Column(db.Integer)
     month_count = db.Column(db.Integer)
 
+
 class monthrev(db.Model):
     __tablename__ = 'monthrev'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -110,10 +118,11 @@ class monthrev(db.Model):
     Circus = db.Column(db.Integer)
     Gravitron = db.Column(db.Integer)
 
+
 class monthcount(db.Model):
     __tablename__ = 'monthcount'
     id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
+    time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     Carousel = db.Column(db.Integer)
     Darkride = db.Column(db.Integer)
     Droptower = db.Column(db.Integer)
@@ -124,10 +133,12 @@ class monthcount(db.Model):
     SpiralSlide = db.Column(db.Integer)
     Circus = db.Column(db.Integer)
     Gravitron = db.Column(db.Integer)
+
 
 @manager.command
 def seed():
     populateDB.populateRide()
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     manager.run()

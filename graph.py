@@ -1,12 +1,10 @@
-from flask_sqlalchemy import SQLAlchemy
 from models import *
-from datetime import datetime
 import time
-import json
+
 
 def getAgeRanges():
     customers = Customer.query.all()
-    ageRange = [0,0,0,0,0,0]
+    ageRange = [0, 0, 0, 0, 0, 0]
     for customer in customers:
         age = customer.age
         if age <= 10:
@@ -23,9 +21,11 @@ def getAgeRanges():
             ageRange[5] += 1
     return ageRange
 
+
 def date_to_millis(d):
     """Converts a datetime object to the number of milliseconds since the unix epoch."""
     return int(time.mktime(d.timetuple())) * 1000
+
 
 def getDayStats():
     daystats = day.query.all()
@@ -36,7 +36,8 @@ def getDayStats():
         dates.append(date_to_millis(d.time))
         revenue.append(d.day_rev)
         count.append(d.day_count)
-    return dates,revenue,count
+    return dates, revenue, count
+
 
 def getDayRideRevenue():
     dayRideRevenue = dayrev.query.all()
@@ -63,7 +64,8 @@ def getDayRideRevenue():
         SpiralSlide.append(d.SpiralSlide)
         Circus.append(d.Circus)
         Gravitron.append(d.Gravitron)
-    return dates,Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+    return dates, Carousel, Darkride, Droptower, Ferriswheel, Gyrotower, Rollercoaster, Waterride, SpiralSlide, Circus, Gravitron
+
 
 def getDayRideCount():
     dayRideRevenue = daycount.query.all()
@@ -88,7 +90,8 @@ def getDayRideCount():
         SpiralSlide.append(d.SpiralSlide)
         Circus.append(d.Circus)
         Gravitron.append(d.Gravitron)
-    return Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+    return Carousel, Darkride, Droptower, Ferriswheel, Gyrotower, Rollercoaster, Waterride, SpiralSlide, Circus, Gravitron
+
 
 def getMonthStats():
     monthstats = month.query.all()
@@ -99,7 +102,8 @@ def getMonthStats():
         dates.append(date_to_millis(d.time))
         revenue.append(d.month_rev)
         count.append(d.month_count)
-    return dates,revenue,count
+    return dates, revenue, count
+
 
 def getMonthRideRevenue():
     monthRideRevenue = monthrev.query.all()
@@ -126,7 +130,8 @@ def getMonthRideRevenue():
         SpiralSlide.append(d.SpiralSlide)
         Circus.append(d.Circus)
         Gravitron.append(d.Gravitron)
-    return dates,Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+    return dates, Carousel, Darkride, Droptower, Ferriswheel, Gyrotower, Rollercoaster, Waterride, SpiralSlide, Circus, Gravitron
+
 
 def getMonthRideCount():
     monthRideRevenue = monthcount.query.all()
@@ -151,4 +156,4 @@ def getMonthRideCount():
         SpiralSlide.append(d.SpiralSlide)
         Circus.append(d.Circus)
         Gravitron.append(d.Gravitron)
-    return Carousel,Darkride,Droptower,Ferriswheel,Gyrotower,Rollercoaster,Waterride,SpiralSlide,Circus,Gravitron
+    return Carousel, Darkride, Droptower, Ferriswheel, Gyrotower, Rollercoaster, Waterride, SpiralSlide, Circus, Gravitron

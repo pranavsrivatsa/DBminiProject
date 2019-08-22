@@ -7,7 +7,7 @@ EUR:
     Our objective is to perform a statistical analysis and generate the realted graphs on the generated data at the end of every day
     and every month to find out the most popular attraction, most income generating attraction, etc.
 
-2.User Saisfaction:
+2.User Satisfaction:
     Any user operating this software only needs to login and start the park and the data will be generated automatically.
     
     This is a real time time simulation and the tables, graphs and pages are automatically updated as the park starts getting customers.
