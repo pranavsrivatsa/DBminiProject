@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import time
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/apms'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://wjnrdgerdnlecm:a55ffe88fa53928bff22271ac7b51b8381244f317f9d12a01b08ac330bbf9038@ec2-54-235-180-123.compute-1.amazonaws.com:5432/db140ed2g8ukhd'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
