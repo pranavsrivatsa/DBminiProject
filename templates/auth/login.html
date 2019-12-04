@@ -22,34 +22,39 @@
     <link rel="stylesheet" href="{{url_for('static', filename='assets/css/responsive.css')}}">
     <!-- modernizr css -->
     <script src="{{url_for('static', filename='assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
+    <style>
+    .login-area{
+            background-image:url("{{url_for('static', filename='assets/images/bg/amusementPark.jpg')}}");
+        /* filter: blur(2px);
+        -webkit-filter: blur(2px); */
+            background-color: #aaaaaa   ;
+/*            height: 500px;*/
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+            background-blend-mode: overlay;
+         }
+    </style>
 </head>
 
-<body><!--  background:"{{ url_for('static', filename='pic.jpg')}}"> -->
+<body>
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
     <!-- preloader area start -->
-    <div id="preloader">
-        <div class="loader"></div>
-    </div>
     <!-- preloader area end -->
     <!-- login area start -->
     <div class="login-area login-s2">
         <div class="container">
-            <div class="login-box ptb--100">
+            <div class="login-box ptb--5">
                 <form action="#" method="post">
                     <div class="login-form-head">
                         <h1>Login Page</h1>
                         <br> 
-                        <br>
-                        <br>
-                        <p style="font-size:28px">Hello there!</p>
-                        <br>
-                        <br> 
+                        <p style="font-size:28px;">Hello there!</p>
                         <br>
                         <p style="font-size:22px"> Welcome to the Amusement Park Automation and Management System!</p>
-                        <br> 
-                        
+                        <br>                         
                         <p style="font-size:22px">Please Sign in</p>
                     </div>
                     <div class="login-form-body">
@@ -71,8 +76,8 @@
                           <p class="error"><strong>Error:</strong> {{ error }}
                         </div>
                         {% endif %}
-                        <div class="form-footer text-center mt-5">
-                            <p class="text-muted">Don't have an account? <a href="{{url_for('register')}}">Sign up</a></p>
+                        <div class="form-footer text-center mt-1">
+                            <p style="color: black; font-size: 20px;">Don't have an account? <a href="{{url_for('register')}}" style="color: darkred; font-size: 20px;">Sign up</a></p>
                         </div>
                     </div>
                 </form>

@@ -11,6 +11,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
 
+monthcount.query.delete()
+monthrev.query.delete()
+month.query.delete()
+daycount.query.delete()
+dayrev.query.delete()
+day.query.delete()
+CustomerRidesLink.query.delete()
+Ride.query.delete()
+Customer.query.delete()
+
+
 
 @app.route("/", methods=['GET', 'POST'])
 def login():

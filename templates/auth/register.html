@@ -22,6 +22,19 @@
     <link rel="stylesheet" href="{{url_for('static', filename='assets/css/responsive.css')}}">
     <!-- modernizr css -->
     <script src="{{url_for('static', filename='assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
+    <style>
+    .login-area{
+            background-image:url("{{url_for('static', filename='assets/images/bg/amusementPark.jpg')}}");
+        /* filter: blur(2px);
+        -webkit-filter: blur(2px); */
+            background-color: #aaaaaa   ;
+/*            height: 500px;*/
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+            background-blend-mode: overlay;
+         }
+    </style>    
 </head>
 
 <body>
@@ -36,7 +49,7 @@
     <!-- login area start -->
     <div class="login-area login-s2">
         <div class="container">
-            <div class="login-box ptb--100">
+            <div class="login-box ptb--5">
                 <form action="#" method="post">
                     <div class="login-form-head">
                         <h4>Sign up</h4>
@@ -66,8 +79,8 @@
                         <div class="submit-btn-area">
                             <button id="form_submit" type="submit" value="Submit">Submit<i class="ti-arrow-right"></i></button>
                         </div>
-                        <div class="form-footer text-center mt-5">
-                            <p class="text-muted">Have an account? <a href="{{url_for('login')}}">Sign in</a></p>
+                        <div class="form-footer text-center mt-1">
+                            <p class="text-muted">Have an account? <a href="{{url_for('login')}}" style="color: darkred; font-size: 20px;">Sign in</a></p>
                         </div>
                     </div>
                 </form>
